@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Event Hub — Панель ивентов</title>
+<title>Event Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@500;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--g1:#4ade80;--g2:#16a34a;--g3:#052e16;--g4:#14532d;--bg:#050f07;--bg2:#0a160b;--bg3:#0f1e10;--border:#1a3a1e;--text:#c6dfc9;--muted:#5a856a;--white:#eef5ee;--red:#ef4444;--amber:#f59e0b;--mono:'Share Tech Mono',monospace;--sans:'Barlow',sans-serif;--head:'Oswald',sans-serif}
+:root{--g1:#4ade80;--g2:#16a34a;--g3:#052e16;--g4:#14532d;--bg:#050f07;--bg2:#0a160b;--bg3:#0f1e10;--border:#1a3a1e;--text:#c6dfc9;--muted:#5a856a;--white:#eef5ee;--red:#ef4444;--amber:#f59e0b;--purple:#a78bfa;--mono:'Share Tech Mono',monospace;--sans:'Barlow',sans-serif;--head:'Oswald',sans-serif}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(74,222,128,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(74,222,128,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
-
 .topbar{position:sticky;top:0;z-index:100;background:rgba(5,15,7,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;height:52px;gap:12px}
 .topbar-brand{font-family:var(--head);font-size:1rem;font-weight:700;color:var(--g1);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0}
 .topbar-nav{display:flex;gap:3px;margin-left:20px;flex-wrap:wrap}
@@ -21,10 +20,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .topbar-user b{color:var(--g1)}
 .btn-logout{background:none;border:1px solid rgba(239,68,68,.3);color:var(--red);font-family:var(--mono);font-size:.62rem;padding:5px 10px;border-radius:3px;cursor:pointer;transition:all .15s}
 .btn-logout:hover{background:rgba(239,68,68,.1);border-color:var(--red)}
-
 main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:32px 28px 80px}
-
-/* LOGIN */
 .login-wrap{display:flex;align-items:center;justify-content:center;min-height:80vh}
 .login-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:44px 40px;width:100%;max-width:380px;text-align:center}
 .login-box h2{font-family:var(--head);font-size:1.4rem;color:var(--white);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
@@ -34,8 +30,6 @@ main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:32px 28px
 .login-box .btn-login{width:100%;padding:12px;background:var(--g2);color:#fff;font-family:var(--head);font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer;transition:background .15s}
 .login-box .btn-login:hover{background:var(--g1);color:var(--bg)}
 .login-err{color:var(--red);font-size:.82rem;margin-top:12px;min-height:20px}
-
-/* CARDS */
 .cards{display:grid;gap:12px}
 .card{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--g4);border-radius:0 6px 6px 0;padding:18px 22px;cursor:pointer;transition:all .2s;text-decoration:none;color:inherit;position:relative}
 .card:hover{background:var(--bg3)}
@@ -49,17 +43,12 @@ main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:32px 28px
 .card-title{font-family:var(--head);font-size:1rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:.04em}
 .card-pills{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap;align-items:center}
 .pill{font-family:var(--mono);font-size:.55rem;letter-spacing:.07em;color:var(--g1);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:99px;padding:2px 9px;white-space:nowrap}
-.pill.amber{color:var(--amber);background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.2)}
-.pill.red{color:var(--red);background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2)}
-/* STATUS BADGE on card */
 .status-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;padding:3px 10px;border-radius:3px;font-weight:700}
 .status-badge.approved{color:#22c55e;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3)}
 .status-badge.rejected{color:#ef4444;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3)}
 .status-badge.pending{color:#eab308;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2)}
 .card-desc{font-size:.88rem;color:var(--text);line-height:1.65;margin-bottom:4px}
 .card-meta{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.06em}
-
-/* EVENT DETAIL */
 .ev-hero{padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:24px}
 .ev-hero h1{font-family:var(--head);font-size:clamp(1.5rem,4vw,2.2rem);color:var(--white);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .ev-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -77,50 +66,50 @@ main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:32px 28px
 .btn-back{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--border);padding:5px 12px;border-radius:3px;cursor:pointer;margin-bottom:16px;transition:all .15s}
 .btn-back:hover{color:var(--g1);border-color:rgba(74,222,128,.3)}
 .ev-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-
-/* BUTTONS */
 .btn{font-family:var(--mono);font-size:.68rem;letter-spacing:.07em;padding:8px 16px;border-radius:4px;cursor:pointer;border:1px solid;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
-.btn-green{background:var(--g2);color:#fff;border-color:var(--g2)}
-.btn-green:hover{background:var(--g1);color:var(--bg);border-color:var(--g1)}
-.btn-outline{background:none;color:var(--muted);border-color:var(--border)}
-.btn-outline:hover{color:var(--g1);border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.04)}
-.btn-red{background:none;color:var(--red);border-color:rgba(239,68,68,.3)}
-.btn-red:hover{background:rgba(239,68,68,.1);border-color:var(--red)}
-.btn-approve{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4)}
-.btn-approve:hover{background:rgba(34,197,94,.25);border-color:#22c55e}
-.btn-reject{background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.3)}
-.btn-reject:hover{background:rgba(239,68,68,.18);border-color:#ef4444}
-
-/* FORM */
+.btn-green{background:var(--g2);color:#fff;border-color:var(--g2)}.btn-green:hover{background:var(--g1);color:var(--bg)}
+.btn-outline{background:none;color:var(--muted);border-color:var(--border)}.btn-outline:hover{color:var(--g1);border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.04)}
+.btn-red{background:none;color:var(--red);border-color:rgba(239,68,68,.3)}.btn-red:hover{background:rgba(239,68,68,.1);border-color:var(--red)}
+.btn-approve{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4)}.btn-approve:hover{background:rgba(34,197,94,.25)}
+.btn-reject{background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.3)}.btn-reject:hover{background:rgba(239,68,68,.18)}
 .form-group{margin-bottom:14px}
 .form-group label{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;color:var(--g1);text-transform:uppercase;margin-bottom:5px}
 .form-group input,.form-group textarea,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--sans);font-size:.88rem;padding:10px 12px;border-radius:4px;outline:none;transition:border-color .15s}
 .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--g2)}
 .form-group textarea{min-height:110px;resize:vertical;line-height:1.6}
+.form-group select{cursor:pointer}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
-/* USERS TABLE */
-.users-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:4px;overflow:hidden}
-.users-table th{font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--g1);background:rgba(74,222,128,.05);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border)}
-.users-table td{font-size:.85rem;color:var(--text);padding:9px 12px;border-bottom:1px solid rgba(26,58,30,.5);background:var(--bg2);vertical-align:middle}
+.users-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:4px;overflow:hidden;font-size:.82rem}
+.users-table th{font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--g1);background:rgba(74,222,128,.05);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+.users-table td{color:var(--text);padding:8px 10px;border-bottom:1px solid rgba(26,58,30,.5);background:var(--bg2);vertical-align:middle}
 .users-table tr:last-child td{border-bottom:none}
 .users-table tr:hover td{background:var(--bg3)}
-.role-badge{font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;padding:3px 8px;border-radius:3px;display:inline-block}
+.role-badge{font-family:var(--mono);font-size:.54rem;letter-spacing:.06em;padding:3px 8px;border-radius:3px;display:inline-block}
 .role-admin{color:var(--amber);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2)}
-.role-senior_eventologist{color:#a78bfa;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2)}
+.role-senior_eventologist{color:var(--purple);background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2)}
 .role-eventologist{color:var(--g1);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2)}
 .role-junior_eventologist{color:var(--muted);background:rgba(90,133,106,.1);border:1px solid rgba(90,133,106,.2)}
-
 .toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--g2);border-radius:6px;padding:12px 20px;font-family:var(--mono);font-size:.76rem;color:var(--g1);z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.error{border-color:var(--red);color:var(--red)}
-
+.toast.show{transform:translateY(0);opacity:1}.toast.error{border-color:var(--red);color:var(--red)}
 .page-title{font-family:var(--head);font-size:1.2rem;color:var(--white);text-transform:uppercase;letter-spacing:.06em;margin-bottom:20px;display:flex;align-items:center;gap:10px}
 .page-title .count{font-family:var(--mono);font-size:.65rem;color:var(--muted)}
-.empty-state{text-align:center;padding:50px 20px;color:var(--muted)}
-.empty-state .big{font-size:2.5rem;margin-bottom:10px}
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted)}.empty-state .big{font-size:2.5rem;margin-bottom:10px}
 footer{position:relative;z-index:1;text-align:center;padding:18px;font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.1em;border-top:1px solid var(--border);margin-top:50px}
-@media(max-width:580px){.topbar{padding:0 12px;gap:6px;height:auto;flex-wrap:wrap;padding:8px 12px} main{padding:20px 12px 60px} .form-row{grid-template-columns:1fr} .card-pills{margin-left:0} .ev-info{grid-template-columns:1fr 1fr}}
+/* inline select in table */
+.tbl-select{background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--mono);font-size:.62rem;padding:4px 6px;border-radius:3px;cursor:pointer;outline:none}
+.tbl-select:focus{border-color:var(--g2)}
+.tbl-btn{font-family:var(--mono);font-size:.58rem;padding:3px 8px;border-radius:3px;cursor:pointer;border:1px solid;transition:all .15s;background:none}
+.perm-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+.perm-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+.perm-item select{background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--mono);font-size:.58rem;padding:2px 4px;border-radius:3px;cursor:pointer;outline:none}
+/* user card for mobile-friendly display */
+.user-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:10px}
+.user-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.user-card-name{font-size:.92rem;color:var(--white);font-weight:500}
+.user-card-login{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.user-card-id{font-family:var(--mono);font-size:.72rem;color:var(--g1)}
+.user-card-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+@media(max-width:580px){.topbar{padding:8px 12px;height:auto;flex-wrap:wrap} main{padding:20px 12px 60px} .form-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -139,37 +128,36 @@ footer{position:relative;z-index:1;text-align:center;padding:18px;font-family:va
 </div>
 <main id="app"></main>
 <div class="toast" id="toast"></div>
-
 <script>
-let currentUser=null, allEvents=[];
+let U=null;
 const RL={admin:'Главный Ивентолог',senior_eventologist:'Ст. Ивентолог',eventologist:'Ивентолог',junior_eventologist:'Мл. Ивентолог'};
 const SL={approved:{icon:'✅',text:'Одобрен',cls:'approved'},rejected:{icon:'❌',text:'Отклонён',cls:'rejected'},pending:{icon:'⏳',text:'На проверке',cls:'pending'}};
+function stb(s){const o=SL[s]||SL.pending;return`<span class="status-badge ${o.cls}">${o.icon} ${o.text}</span>`}
+function esc(s){if(s==null)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function escTA(s){return(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function toast(m,e){const t=document.getElementById('toast');t.textContent=m;t.className='toast show'+(e?' error':'');setTimeout(()=>t.className='toast',3000)}
 
-async function init(){const r=await fetch('/api/me');const d=await r.json();if(d.authenticated){currentUser=d;onLogin()}else showLogin()}
-
+async function init(){const r=await fetch('/api/me');const d=await r.json();if(d.authenticated){U=d;onLogin()}else showLogin()}
 function onLogin(){
   document.getElementById('topbar').style.display='flex';
-  document.getElementById('topbar-user').innerHTML=`<b>${currentUser.display_name}</b> · ${RL[currentUser.role]}`;
-  document.getElementById('nav-users').style.display=currentUser.role==='admin'?'':'none';
+  document.getElementById('topbar-user').innerHTML=`<b>${U.display_name}</b> · ${RL[U.role]}`;
+  document.getElementById('nav-users').style.display=U.can_manage_users?'':'none';
   showPage('events');
 }
-
 function showLogin(){
   document.getElementById('topbar').style.display='none';
   document.getElementById('app').innerHTML=`<div class="login-wrap"><div class="login-box"><h2>Event Hub</h2><p class="sub">Панель управления ивентами</p><input type="text" id="l-u" placeholder="Логин" autocomplete="username"><input type="password" id="l-p" placeholder="Пароль" autocomplete="current-password"><button class="btn-login" onclick="doLogin()">Войти</button><div class="login-err" id="l-e"></div></div></div>`;
   document.getElementById('l-u').focus();
   document.getElementById('l-p').onkeypress=e=>{if(e.key==='Enter')doLogin()};
 }
-
 async function doLogin(){
   const u=document.getElementById('l-u').value.trim(),p=document.getElementById('l-p').value;
   if(!u||!p)return;const fd=new FormData();fd.append('username',u);fd.append('password',p);
   const r=await fetch('/api/login',{method:'POST',body:fd});const d=await r.json();
   if(d.error){document.getElementById('l-e').textContent=d.error;return}
-  currentUser=(await(await fetch('/api/me')).json());onLogin();
+  U=(await(await fetch('/api/me')).json());onLogin();
 }
-
-async function logout(){await fetch('/api/logout',{method:'POST'});currentUser=null;showLogin()}
+async function logout(){await fetch('/api/logout',{method:'POST'});U=null;showLogin()}
 
 function showPage(p){
   document.querySelectorAll('.topbar-nav button').forEach(b=>b.classList.remove('active'));
@@ -177,38 +165,37 @@ function showPage(p){
   if(p==='events')loadEvents();else if(p==='my')loadMyEvents();else if(p==='create')showEventForm();else if(p==='users')loadUsers();
 }
 
-function statusBadge(s){const o=SL[s]||SL.pending;return `<span class="status-badge ${o.cls}">${o.icon} ${o.text}</span>`}
-
 function renderCardList(events,title,emptyMsg){
   if(!events.length){document.getElementById('app').innerHTML=`<div class="page-title">${title}</div><div class="empty-state"><div class="big">📭</div><p>${emptyMsg}</p></div>`;return}
   let h=`<div class="page-title">${title} <span class="count">(${events.length})</span></div><div class="cards">`;
-  events.forEach(ev=>{
+  events.forEach((ev,i)=>{
     const st=ev.status||'pending';
+    const num=events.length-i;
     h+=`<div class="card st-${st}" onclick="viewEvent(${ev.id})">
       <div class="card-top">
-        <span class="card-num">#${ev.id}</span>
+        <span class="card-num">№${num}</span>
         <span class="card-title">${esc(ev.title)}</span>
-        <div class="card-pills">${statusBadge(st)}<span class="pill">${esc(ev.event_type)}</span><span class="pill">${esc(ev.duration)}</span></div>
+        <div class="card-pills">${stb(st)}<span class="pill">${esc(ev.event_type)}</span><span class="pill">${esc(ev.duration)}</span></div>
       </div>
       <div class="card-desc">${esc(ev.short_desc)}</div>
       <div class="card-meta">📍 ${esc(ev.location)} · 👤 ${esc(ev.organizer_name)} · Автор: ${esc(ev.author_name)}${ev.reviewed_by?' · Проверил: '+esc(ev.reviewed_by):''}</div>
     </div>`;
   });
-  h+='</div>';
-  document.getElementById('app').innerHTML=h;
+  h+='</div>';document.getElementById('app').innerHTML=h;
 }
 
-async function loadEvents(){const r=await fetch('/api/events');allEvents=await r.json();renderCardList(allEvents,'Все ивенты','Ивенты пока не созданы.')}
-async function loadMyEvents(){const r=await fetch('/api/events/my');const evs=await r.json();renderCardList(evs,'Мои ивенты','У вас пока нет ивентов. Нажмите «Создать».')}
+async function loadEvents(){const r=await fetch('/api/events');renderCardList(await r.json(),'Все ивенты','Ивенты пока не созданы.')}
+async function loadMyEvents(){const r=await fetch('/api/events/my');renderCardList(await r.json(),'Мои ивенты','У вас пока нет ивентов.')}
 
 async function viewEvent(id){
-  const r=await fetch('/api/events/'+id);const ev=await r.json();
-  const canEdit=currentUser&&(currentUser.role==='admin'||currentUser.role==='senior_eventologist'||currentUser.id===ev.author_id);
-  const canReview=currentUser&&(currentUser.role==='admin'||currentUser.role==='senior_eventologist');
+  const ev=await(await fetch('/api/events/'+id)).json();
   const st=ev.status||'pending';
+  const isAuthor=U&&U.id===ev.author_id;
+  const canEdit=U&&(U.role==='admin'||(st!=='approved'&&(U.can_edit_all||isAuthor)));
+  const canReview=U&&U.can_approve;
   let h=`<button class="btn-back" onclick="showPage('events')">← Назад</button>
-    <div class="ev-hero"><h1>${esc(ev.title)} ${statusBadge(st)}</h1>
-    <div class="ev-pills"><span class="pill">${esc(ev.event_type)}</span><span class="pill">${esc(ev.duration)}</span><span class="pill">#${ev.id}</span></div></div>
+    <div class="ev-hero"><h1>${esc(ev.title)} ${stb(st)}</h1>
+    <div class="ev-pills"><span class="pill">${esc(ev.event_type)}</span><span class="pill">${esc(ev.duration)}</span></div></div>
     <div class="ev-info">
       <div class="ev-info-cell"><div class="lbl">Локация</div><div class="val">${esc(ev.location)}</div></div>
       <div class="ev-info-cell"><div class="lbl">Организатор</div><div class="val">${esc(ev.organizer_name)}</div></div>
@@ -221,17 +208,18 @@ async function viewEvent(id){
   if(ev.rewards_text)h+=`<div class="ev-section"><div class="ev-section-title">🏆 Награды</div><div class="ev-note">${esc(ev.rewards_text)}</div></div>`;
   h+='<div class="ev-actions">';
   if(canReview){
-    if(st!=='approved')h+=`<button class="btn btn-approve" onclick="reviewEvent(${ev.id},'approve')">✅ Одобрить</button>`;
-    if(st!=='rejected')h+=`<button class="btn btn-reject" onclick="reviewEvent(${ev.id},'reject')">❌ Отклонить</button>`;
+    if(st!=='approved')h+=`<button class="btn btn-approve" onclick="reviewEv(${ev.id},'approve')">✅ Одобрить</button>`;
+    if(st!=='rejected')h+=`<button class="btn btn-reject" onclick="reviewEv(${ev.id},'reject')">❌ Отклонить</button>`;
   }
-  if(canEdit)h+=`<button class="btn btn-outline" onclick="editEvent(${ev.id})">✏ Редактировать</button><button class="btn btn-red" onclick="deleteEvent(${ev.id})">🗑 Удалить</button>`;
-  h+='</div>';
-  document.getElementById('app').innerHTML=h;
+  if(canEdit)h+=`<button class="btn btn-outline" onclick="editEvent(${ev.id})">✏ Редактировать</button>`;
+  if(canEdit||U.role==='admin')h+=`<button class="btn btn-red" onclick="deleteEvent(${ev.id})">🗑 Удалить</button>`;
+  if(st==='approved'&&U.role!=='admin'&&isAuthor)h+=`<span style="font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-left:8px">🔒 Одобренный ивент — редактирование заблокировано</span>`;
+  h+='</div>';document.getElementById('app').innerHTML=h;
 }
 
-async function reviewEvent(id,action){
+async function reviewEv(id,action){
   const r=await fetch(`/api/events/${id}/${action}`,{method:'POST'});const d=await r.json();
-  if(d.success){toast(action==='approve'?'Ивент одобрен ✅':'Ивент отклонён ❌');viewEvent(id)}else toast(d.detail||'Ошибка',true);
+  if(d.success){toast(action==='approve'?'Ивент одобрен ✅':'Ивент отклонён ❌');viewEvent(id)}else toast(d.detail||'Ошибка',1);
 }
 
 function showEventForm(ev){
@@ -239,59 +227,111 @@ function showEventForm(ev){
   document.getElementById('app').innerHTML=`<button class="btn-back" onclick="showPage('events')">← Назад</button>
     <div class="page-title">${isEdit?'Редактирование':'Создание нового ивента'}</div>
     <form id="ef" onsubmit="saveEvent(event,${isEdit?ev.id:0})">
-      <div class="form-row"><div class="form-group"><label>Название</label><input type="text" name="title" value="${isEdit?esc(ev.title):''}" required></div>
-      <div class="form-group"><label>Тип</label><input type="text" name="event_type" value="${isEdit?esc(ev.event_type):''}" placeholder="Сюжетный / Поисковый" required></div></div>
-      <div class="form-row"><div class="form-group"><label>Продолжительность</label><input type="text" name="duration" value="${isEdit?esc(ev.duration):''}" placeholder="2–3 часа" required></div>
-      <div class="form-group"><label>Локация</label><input type="text" name="location" value="${isEdit?esc(ev.location):''}" placeholder="Дикая территория" required></div></div>
-      <div class="form-group"><label>Организатор</label><input type="text" name="organizer_name" value="${isEdit?esc(ev.organizer_name):(currentUser?currentUser.display_name:'')}" required></div>
+      <div class="form-row"><div class="form-group"><label>Название</label><input name="title" value="${isEdit?esc(ev.title):''}" required></div>
+      <div class="form-group"><label>Тип</label><input name="event_type" value="${isEdit?esc(ev.event_type):''}" placeholder="Сюжетный / Поисковый" required></div></div>
+      <div class="form-row"><div class="form-group"><label>Продолжительность</label><input name="duration" value="${isEdit?esc(ev.duration):''}" placeholder="2–3 часа" required></div>
+      <div class="form-group"><label>Локация</label><input name="location" value="${isEdit?esc(ev.location):''}" placeholder="Дикая территория" required></div></div>
+      <div class="form-group"><label>Организатор</label><input name="organizer_name" value="${isEdit?esc(ev.organizer_name):(U?U.display_name:'')}" required></div>
       <div class="form-group"><label>Краткое описание</label><textarea name="short_desc" rows="3" required>${isEdit?esc(ev.short_desc):''}</textarea></div>
-      <div class="form-group"><label>Полное описание (поддерживается HTML)</label><textarea name="full_desc" rows="10" required>${isEdit?escTA(ev.full_desc):''}</textarea></div>
+      <div class="form-group"><label>Полное описание (HTML)</label><textarea name="full_desc" rows="10" required>${isEdit?escTA(ev.full_desc):''}</textarea></div>
       <div class="form-group"><label>Правила</label><textarea name="rules_text" rows="3">${isEdit?esc(ev.rules_text||''):''}</textarea></div>
       <div class="form-group"><label>Награды</label><textarea name="rewards_text" rows="3">${isEdit?esc(ev.rewards_text||''):''}</textarea></div>
-      <div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">${isEdit?'💾 Сохранить':'➕ Создать ивент'}</button><button type="button" class="btn btn-outline" onclick="showPage('events')">Отмена</button></div>
+      <div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">${isEdit?'💾 Сохранить':'➕ Создать'}</button><button type="button" class="btn btn-outline" onclick="showPage('events')">Отмена</button></div>
     </form>`;
 }
-
-async function editEvent(id){const r=await fetch('/api/events/'+id);const ev=await r.json();showEventForm(ev);document.querySelectorAll('.topbar-nav button').forEach(b=>b.classList.remove('active'))}
-
+async function editEvent(id){const ev=await(await fetch('/api/events/'+id)).json();showEventForm(ev);document.querySelectorAll('.topbar-nav button').forEach(b=>b.classList.remove('active'))}
 async function saveEvent(e,editId){
   e.preventDefault();const fd=new FormData(document.getElementById('ef'));
-  const url=editId?'/api/events/'+editId:'/api/events';const method=editId?'PUT':'POST';
-  const r=await fetch(url,{method,body:fd});const d=await r.json();
-  if(d.success){toast(editId?'Сохранено! Статус сброшен на «На проверке»':'Ивент создан! Ожидает проверки');showPage('events')}else toast(d.detail||'Ошибка',true);
+  const r=await fetch(editId?'/api/events/'+editId:'/api/events',{method:editId?'PUT':'POST',body:fd});const d=await r.json();
+  if(d.success){toast(editId?'Сохранено!':'Ивент создан!');showPage('events')}else toast(d.detail||'Ошибка',1);
 }
+async function deleteEvent(id){if(!confirm('Удалить ивент?'))return;const r=await fetch('/api/events/'+id,{method:'DELETE'});const d=await r.json();if(d.success){toast('Удалён');showPage('events')}else toast(d.detail||'Ошибка',1)}
 
-async function deleteEvent(id){if(!confirm('Удалить ивент?'))return;const r=await fetch('/api/events/'+id,{method:'DELETE'});const d=await r.json();if(d.success){toast('Удалён');showPage('events')}else toast(d.detail||'Ошибка',true)}
-
+// ── USERS ──
 async function loadUsers(){
-  const r=await fetch('/api/users');if(r.status===403){toast('Нет прав',true);showPage('events');return}
+  const r=await fetch('/api/users');if(r.status===403){toast('Нет прав',1);showPage('events');return}
   const users=await r.json();
   let h=`<div class="page-title">Пользователи <span class="count">(${users.length})</span></div>
-    <div style="margin-bottom:16px"><button class="btn btn-green" onclick="showAddUser()">➕ Добавить</button></div>
-    <div id="auf"></div><table class="users-table"><thead><tr><th>ID</th><th>Логин</th><th>Имя</th><th>Роль</th><th></th></tr></thead><tbody>`;
-  users.forEach(u=>{
-    h+=`<tr><td>${u.id}</td><td style="font-family:var(--mono);font-size:.78rem">${esc(u.username)}</td><td>${esc(u.display_name)}</td>
-    <td><span class="role-badge role-${u.role}">${RL[u.role]}</span></td>
-    <td>${u.id!==currentUser.id?`<button class="btn btn-red" onclick="deleteUser(${u.id})" style="font-size:.58rem;padding:4px 8px">Удалить</button>`:''}</td></tr>`;
+    <div style="margin-bottom:16px;display:flex;gap:8px"><button class="btn btn-green" onclick="showAddUser()">➕ Добавить</button></div>
+    <div id="auf"></div>`;
+  users.forEach((u,i)=>{
+    const rc='role-'+u.role;
+    const isSelf=u.id===U.id;
+    const ca=u.can_approve, cea=u.can_edit_all, cmu=u.can_manage_users;
+    h+=`<div class="user-card">
+      <div class="user-card-head">
+        <span class="user-card-id">#${i+1}</span>
+        <span class="user-card-name">${esc(u.display_name)}</span>
+        <span class="user-card-login">@${esc(u.username)}</span>
+        <span class="role-badge ${rc}">${RL[u.role]}</span>
+      </div>`;
+    if(!isSelf){
+      h+=`<div class="user-card-controls">
+        <select class="tbl-select" onchange="changeRole(${u.id},this.value)">
+          <option value="junior_eventologist"${u.role==='junior_eventologist'?' selected':''}>Мл. Ивентолог</option>
+          <option value="eventologist"${u.role==='eventologist'?' selected':''}>Ивентолог</option>
+          <option value="senior_eventologist"${u.role==='senior_eventologist'?' selected':''}>Ст. Ивентолог</option>
+          <option value="admin"${u.role==='admin'?' selected':''}>Главный Ивентолог</option>
+        </select>
+        <button class="tbl-btn" style="color:var(--amber);border-color:rgba(245,158,11,.3)" onclick="showPerms(${u.id},${ca===null?'null':ca},${cea===null?'null':cea},${cmu===null?'null':cmu})">⚙ Права</button>
+        <button class="tbl-btn" style="color:var(--purple);border-color:rgba(167,139,250,.3)" onclick="showChangePw(${u.id})">🔑 Пароль</button>
+        <button class="tbl-btn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="deleteUser(${u.id})">🗑 Удалить</button>
+      </div>`;
+    } else {
+      h+=`<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:4px">Это вы</div>`;
+    }
+    h+=`<div id="perms-${u.id}"></div><div id="pw-${u.id}"></div></div>`;
   });
-  h+='</tbody></table>';document.getElementById('app').innerHTML=h;
+  document.getElementById('app').innerHTML=h;
 }
 
 function showAddUser(){
-  document.getElementById('auf').innerHTML=`<form onsubmit="addUser(event)" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:18px 20px;margin-bottom:16px">
+  document.getElementById('auf').innerHTML=`<div class="user-card" style="border-color:var(--g2)"><form onsubmit="addUser(event)">
     <div class="form-row"><div class="form-group"><label>Логин</label><input name="username" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" required></div></div>
     <div class="form-row"><div class="form-group"><label>Имя</label><input name="display_name" required></div><div class="form-group"><label>Роль</label><select name="role">
       <option value="junior_eventologist">Мл. Ивентолог</option><option value="eventologist">Ивентолог</option><option value="senior_eventologist">Ст. Ивентолог</option><option value="admin">Главный Ивентолог</option>
     </select></div></div>
-    <div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">Добавить</button><button type="button" class="btn btn-outline" onclick="document.getElementById('auf').innerHTML=''">Отмена</button></div></form>`;
+    <div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">Добавить</button><button type="button" class="btn btn-outline" onclick="document.getElementById('auf').innerHTML=''">Отмена</button></div></form></div>`;
+}
+async function addUser(e){e.preventDefault();const fd=new FormData(e.target);const r=await fetch('/api/users',{method:'POST',body:fd});const d=await r.json();if(d.success){toast('Добавлен!');loadUsers()}else toast(d.detail||'Ошибка',1)}
+async function deleteUser(id){if(!confirm('Удалить пользователя?'))return;const r=await fetch('/api/users/'+id,{method:'DELETE'});const d=await r.json();if(d.success){toast('Удалён');loadUsers()}else toast(d.detail||'Ошибка',1)}
+
+async function changeRole(uid,role){
+  const fd=new FormData();fd.append('role',role);
+  const r=await fetch(`/api/users/${uid}/role`,{method:'PUT',body:fd});const d=await r.json();
+  if(d.success)toast('Роль изменена!');else toast(d.detail||'Ошибка',1);
 }
 
-async function addUser(e){e.preventDefault();const fd=new FormData(e.target);const r=await fetch('/api/users',{method:'POST',body:fd});const d=await r.json();if(d.success){toast('Добавлен!');loadUsers()}else toast(d.detail||'Ошибка',true)}
-async function deleteUser(id){if(!confirm('Удалить пользователя?'))return;const r=await fetch('/api/users/'+id,{method:'DELETE'});const d=await r.json();if(d.success){toast('Удалён');loadUsers()}else toast(d.detail||'Ошибка',true)}
+function showPerms(uid,ca,cea,cmu){
+  const sel=(name,val)=>`<select class="perm-item" name="${name}"><option value="null"${val===null?' selected':''}>По роли</option><option value="1"${val===1?' selected':''}>✅ Да</option><option value="0"${val===0?' selected':''}>❌ Нет</option></select>`;
+  document.getElementById('perms-'+uid).innerHTML=`<form onsubmit="savePerms(event,${uid})" style="margin-top:10px;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:4px">
+    <div style="font-family:var(--mono);font-size:.6rem;color:var(--g1);margin-bottom:8px;letter-spacing:.1em">ИНДИВИДУАЛЬНЫЕ ПРАВА</div>
+    <div class="perm-row">
+      <span class="perm-item">Одобрение: ${sel('can_approve',ca)}</span>
+      <span class="perm-item">Редакт. всех: ${sel('can_edit_all',cea)}</span>
+      <span class="perm-item">Управл. юзерами: ${sel('can_manage_users',cmu)}</span>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:6px"><button type="submit" class="btn btn-green" style="font-size:.6rem;padding:5px 12px">Сохранить</button><button type="button" class="btn btn-outline" style="font-size:.6rem;padding:5px 12px" onclick="document.getElementById('perms-${uid}').innerHTML=''">Закрыть</button></div>
+  </form>`;
+}
+async function savePerms(e,uid){
+  e.preventDefault();const fd=new FormData(e.target);
+  const r=await fetch(`/api/users/${uid}/perms`,{method:'PUT',body:fd});const d=await r.json();
+  if(d.success){toast('Права сохранены!');loadUsers()}else toast(d.detail||'Ошибка',1);
+}
 
-function esc(s){if(s==null)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function escTA(s){return(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function toast(m,err){const t=document.getElementById('toast');t.textContent=m;t.className='toast show'+(err?' error':'');setTimeout(()=>t.className='toast',3000)}
+function showChangePw(uid){
+  document.getElementById('pw-'+uid).innerHTML=`<form onsubmit="changePw(event,${uid})" style="margin-top:8px;display:flex;gap:6px;align-items:end">
+    <div class="form-group" style="margin:0;flex:1"><label>Новый пароль</label><input type="password" name="password" required style="padding:6px 10px;font-size:.8rem"></div>
+    <button type="submit" class="btn btn-green" style="font-size:.6rem;padding:6px 12px;height:fit-content">Сменить</button>
+    <button type="button" class="btn btn-outline" style="font-size:.6rem;padding:6px 12px;height:fit-content" onclick="document.getElementById('pw-${uid}').innerHTML=''">✕</button></form>`;
+}
+async function changePw(e,uid){
+  e.preventDefault();const fd=new FormData(e.target);
+  const r=await fetch(`/api/users/${uid}/password`,{method:'PUT',body:fd});const d=await r.json();
+  if(d.success){toast('Пароль изменён!');document.getElementById('pw-'+uid).innerHTML=''}else toast(d.detail||'Ошибка',1);
+}
+
 init();
 </script>
 <footer>Event Hub · Панель управления ивентами</footer>
