@@ -1,5 +1,5 @@
-import os, sqlite3, hashlib, json
-from fastapi import FastAPI, HTTPException, Form, Request, Query
+import os, sqlite3, hashlib
+from fastapi import FastAPI, HTTPException, Form, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from datetime import datetime, timedelta
@@ -10,20 +10,8 @@ DB_PATH = "events.db"
 SECRET_KEY = os.environ.get("SECRET_KEY", "stalker_zone_secret_key_change_me_in_prod")
 ALGORITHM = "HS256"
 
-STATUSES = {
-    "draft":     {"label":"Черновик",     "icon":"📝","color":"#6b7280"},
-    "pending":   {"label":"На проверке",  "icon":"⏳","color":"#eab308"},
-    "approved":  {"label":"Одобрен",      "icon":"✅","color":"#22c55e"},
-    "scheduled": {"label":"Запланирован", "icon":"📅","color":"#3b82f6"},
-    "active":    {"label":"Проводится",   "icon":"🔥","color":"#f97316"},
-    "completed": {"label":"Завершён",     "icon":"🏁","color":"#8b5cf6"},
-    "archived":  {"label":"Архив",        "icon":"📦","color":"#6b7280"},
-}
-
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row; return conn
 def h_pw(p): return hashlib.sha256(p.encode('utf-8')).hexdigest()
 def v_pw(p, h): return h_pw(p) == h
 
@@ -44,34 +32,29 @@ def init_db():
         duration TEXT NOT NULL, location TEXT NOT NULL, organizer_name TEXT NOT NULL,
         author_id INTEGER NOT NULL, short_desc TEXT NOT NULL, full_desc TEXT NOT NULL,
         rules_text TEXT, rewards_text TEXT, status TEXT DEFAULT 'pending',
-        reviewed_by TEXT DEFAULT NULL, event_date TEXT DEFAULT NULL, event_time TEXT DEFAULT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (author_id) REFERENCES users (id))''')
+        reviewed_by TEXT DEFAULT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (author_id) REFERENCES users (id))''')
     c.execute('''CREATE TABLE IF NOT EXISTS spawn_whitelist (
         id INTEGER PRIMARY KEY AUTOINCREMENT, item_name TEXT UNIQUE NOT NULL, category TEXT DEFAULT '',
         added_by TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
     c.execute('''CREATE TABLE IF NOT EXISTS spawn_reports (
         id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER NOT NULL, user_id INTEGER NOT NULL,
         user_name TEXT NOT NULL, item_name TEXT NOT NULL, quantity INTEGER NOT NULL DEFAULT 1,
-        note TEXT DEFAULT '', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (event_id) REFERENCES events (id), FOREIGN KEY (user_id) REFERENCES users (id))''')
+        note TEXT DEFAULT '', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
     c.execute('''CREATE TABLE IF NOT EXISTS comments (
         id INTEGER PRIMARY KEY AUTOINCREMENT, event_id INTEGER NOT NULL, user_id INTEGER NOT NULL,
         user_name TEXT NOT NULL, user_role TEXT NOT NULL, text TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (event_id) REFERENCES events (id), FOREIGN KEY (user_id) REFERENCES users (id))''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
     c.execute('''CREATE TABLE IF NOT EXISTS notifications (
         id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, type TEXT NOT NULL,
         message TEXT NOT NULL, event_id INTEGER DEFAULT NULL, is_read INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users (id))''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
     # Migrations
     for col in ("can_approve","can_edit_all","can_manage_users"):
         try: c.execute(f"ALTER TABLE users ADD COLUMN {col} INTEGER DEFAULT NULL")
         except: pass
     for col in ("can_manage_roles","is_system"):
         try: c.execute(f"ALTER TABLE roles ADD COLUMN {col} INTEGER DEFAULT 0")
-        except: pass
-    for col in ("event_date","event_time"):
-        try: c.execute(f"ALTER TABLE events ADD COLUMN {col} TEXT DEFAULT NULL")
         except: pass
     # Seed roles
     c.execute("SELECT COUNT(*) FROM roles")
@@ -81,17 +64,12 @@ def init_db():
             ("admin","Главный Ивентолог","#f59e0b",80,1,1,1,1,1),
             ("senior_eventologist","Ст. Ивентолог","#a78bfa",60,1,1,0,0,1),
             ("eventologist","Ивентолог","#4ade80",40,0,0,0,0,1),
-            ("junior_eventologist","Мл. Ивентолог","#5a856a",20,0,0,0,0,1),
-        ])
+            ("junior_eventologist","Мл. Ивентолог","#5a856a",20,0,0,0,0,1)])
     c.execute("SELECT COUNT(*) FROM users")
     if c.fetchone()[0] == 0:
         c.executemany("INSERT INTO users (username,password_hash,display_name,role) VALUES (?,?,?,?)", [
             ("headadmin",h_pw("headadmin123"),"Head Admin","head_admin"),
-            ("admin",h_pw("admin123"),"Главный Ивентолог Пушкин","admin"),
-            ("senior",h_pw("senior123"),"Ст.Ивентолог","senior_eventologist"),
-            ("eventolog",h_pw("event123"),"Ивентолог","eventologist"),
-            ("junior",h_pw("junior123"),"Мл.Ивентолог","junior_eventologist"),
-        ])
+            ("admin",h_pw("admin123"),"Главный Ивентолог Пушкин","admin")])
     conn.commit(); conn.close()
 
 init_db()
@@ -101,7 +79,7 @@ def get_role_data(rk):
     return dict(r) if r else None
 
 def get_perms(user):
-    rd = get_role_data(user["role"]) or {"can_approve":0,"can_edit_all":0,"can_manage_users":0,"can_manage_roles":0}
+    rd = get_role_data(user["role"]) or {}
     p = {}
     for k in ("can_approve","can_edit_all","can_manage_users"):
         v = user[k]; p[k] = bool(v) if v is not None else bool(rd.get(k,0))
@@ -112,16 +90,15 @@ def get_current_user(req):
     token = req.cookies.get("access_token")
     if not token: return None
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        un = payload.get("sub")
+        un = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
         if not un: return None
     except: return None
     conn = get_db(); u = conn.execute("SELECT * FROM users WHERE username=?", (un,)).fetchone(); conn.close()
     return u
 
-def notify(user_id, type, message, event_id=None):
+def notify(user_id, ntype, message, event_id=None):
     conn = get_db()
-    conn.execute("INSERT INTO notifications (user_id,type,message,event_id) VALUES (?,?,?,?)", (user_id,type,message,event_id))
+    conn.execute("INSERT INTO notifications (user_id,type,message,event_id) VALUES (?,?,?,?)", (user_id,ntype,message,event_id))
     conn.commit(); conn.close()
 
 def reorder_ids(table):
@@ -130,13 +107,10 @@ def reorder_ids(table):
         oi = row["id"]
         if oi != ni:
             if table == "users":
-                conn.execute("UPDATE events SET author_id=? WHERE author_id=?", (ni,oi))
-                conn.execute("UPDATE spawn_reports SET user_id=? WHERE user_id=?", (ni,oi))
-                conn.execute("UPDATE comments SET user_id=? WHERE user_id=?", (ni,oi))
-                conn.execute("UPDATE notifications SET user_id=? WHERE user_id=?", (ni,oi))
+                for t in ("events:author_id","spawn_reports:user_id","comments:user_id","notifications:user_id"):
+                    tb,col = t.split(":"); conn.execute(f"UPDATE {tb} SET {col}=? WHERE {col}=?", (ni,oi))
             if table == "events":
-                conn.execute("UPDATE spawn_reports SET event_id=? WHERE event_id=?", (ni,oi))
-                conn.execute("UPDATE comments SET event_id=? WHERE event_id=?", (ni,oi))
+                for t in ("spawn_reports","comments"): conn.execute(f"UPDATE {t} SET event_id=? WHERE event_id=?", (ni,oi))
             conn.execute(f"UPDATE {table} SET id=? WHERE id=?", (ni,oi))
     mx = len(rows)
     conn.execute(f"DELETE FROM sqlite_sequence WHERE name=?", (table,))
@@ -160,12 +134,8 @@ async def me(req:Request):
     u = get_current_user(req)
     if not u: return {"authenticated":False}
     p = get_perms(u); rd = get_role_data(u["role"])
-    return {"authenticated":True,"id":u["id"],"username":u["username"],"display_name":u["display_name"],"role":u["role"],
-            "role_display":rd["display_name"] if rd else u["role"],"role_color":rd["color"] if rd else "#4ade80",**p}
-
-@app.get("/api/statuses")
-async def get_statuses():
-    return STATUSES
+    return {"authenticated":True,"id":u["id"],"username":u["username"],"display_name":u["display_name"],
+            "role":u["role"],"role_display":rd["display_name"] if rd else u["role"],"role_color":rd["color"] if rd else "#4ade80",**p}
 
 # ═══ ROLES ═══
 @app.get("/api/roles")
@@ -184,7 +154,7 @@ async def create_role(req:Request, role_key:str=Form(...), display_name:str=Form
         conn.execute("INSERT INTO roles (role_key,display_name,color,priority,can_approve,can_edit_all,can_manage_users,can_manage_roles,is_system) VALUES (?,?,?,?,?,?,?,?,0)",
             (role_key.strip().lower().replace(" ","_"),display_name.strip(),color.strip(),priority,can_approve,can_edit_all,can_manage_users,can_manage_roles))
         conn.commit()
-    except sqlite3.IntegrityError: conn.close(); raise HTTPException(400, detail="Ключ роли уже занят")
+    except sqlite3.IntegrityError: conn.close(); raise HTTPException(400, detail="Ключ уже занят")
     conn.close(); return {"success":True}
 
 @app.put("/api/roles/{rid}")
@@ -211,12 +181,10 @@ async def delete_role(rid:int, req:Request):
 
 # ═══ EVENTS ═══
 @app.get("/api/events")
-async def list_events(status:str=Query(None)):
+async def list_events():
     conn = get_db()
-    q = "SELECT events.*, users.display_name as author_name FROM events JOIN users ON events.author_id=users.id"
-    if status: q += f" WHERE events.status='{status}'"
-    q += " ORDER BY events.id DESC"
-    rows = conn.execute(q).fetchall(); conn.close(); return [dict(r) for r in rows]
+    rows = conn.execute("SELECT events.*, users.display_name as author_name FROM events JOIN users ON events.author_id=users.id ORDER BY events.id DESC").fetchall()
+    conn.close(); return [dict(r) for r in rows]
 
 @app.get("/api/events/my")
 async def my_events(req:Request):
@@ -226,65 +194,39 @@ async def my_events(req:Request):
     rows = conn.execute("SELECT events.*, users.display_name as author_name FROM events JOIN users ON events.author_id=users.id WHERE events.author_id=? ORDER BY events.id DESC", (u["id"],)).fetchall()
     conn.close(); return [dict(r) for r in rows]
 
-@app.get("/api/events/calendar")
-async def calendar_events():
-    conn = get_db()
-    rows = conn.execute("SELECT id,title,event_type,event_date,event_time,status,location,duration FROM events WHERE event_date IS NOT NULL AND event_date != '' ORDER BY event_date ASC").fetchall()
-    conn.close(); return [dict(r) for r in rows]
-
 @app.get("/api/events/{eid}")
 async def get_event(eid:int):
     conn = get_db()
     row = conn.execute("SELECT events.*, users.display_name as author_name FROM events JOIN users ON events.author_id=users.id WHERE events.id=?", (eid,)).fetchone()
     conn.close()
-    if not row: raise HTTPException(404); return dict(row)
+    if not row: raise HTTPException(404)
+    return dict(row)
 
 @app.post("/api/events")
-async def create_event(req:Request, title:str=Form(...), event_type:str=Form(...), duration:str=Form(...), location:str=Form(...), organizer_name:str=Form(...), short_desc:str=Form(...), full_desc:str=Form(...), rules_text:str=Form(""), rewards_text:str=Form(""), event_date:str=Form(""), event_time:str=Form(""), status:str=Form("pending")):
+async def create_event(req:Request, title:str=Form(...), event_type:str=Form(...), duration:str=Form(...), location:str=Form(...), organizer_name:str=Form(...), short_desc:str=Form(...), full_desc:str=Form(...), rules_text:str=Form(""), rewards_text:str=Form("")):
     u = get_current_user(req)
     if not u: raise HTTPException(401)
-    if status not in ("draft","pending"): status = "pending"
     conn = get_db()
-    c = conn.execute("INSERT INTO events (title,event_type,duration,location,organizer_name,author_id,short_desc,full_desc,rules_text,rewards_text,status,event_date,event_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        (title,event_type,duration,location,organizer_name,u["id"],short_desc,full_desc,rules_text,rewards_text,status,event_date or None,event_time or None))
+    c = conn.execute("INSERT INTO events (title,event_type,duration,location,organizer_name,author_id,short_desc,full_desc,rules_text,rewards_text) VALUES (?,?,?,?,?,?,?,?,?,?)",
+        (title,event_type,duration,location,organizer_name,u["id"],short_desc,full_desc,rules_text,rewards_text))
     conn.commit(); eid=c.lastrowid; conn.close(); return {"success":True,"event_id":eid}
 
 @app.put("/api/events/{eid}")
-async def update_event(eid:int, req:Request, title:str=Form(...), event_type:str=Form(...), duration:str=Form(...), location:str=Form(...), organizer_name:str=Form(...), short_desc:str=Form(...), full_desc:str=Form(...), rules_text:str=Form(""), rewards_text:str=Form(""), event_date:str=Form(""), event_time:str=Form("")):
+async def update_event(eid:int, req:Request, title:str=Form(...), event_type:str=Form(...), duration:str=Form(...), location:str=Form(...), organizer_name:str=Form(...), short_desc:str=Form(...), full_desc:str=Form(...), rules_text:str=Form(""), rewards_text:str=Form("")):
     u = get_current_user(req)
     if not u: raise HTTPException(401)
     p = get_perms(u); conn = get_db()
     ev = conn.execute("SELECT * FROM events WHERE id=?", (eid,)).fetchone()
     if not ev: conn.close(); raise HTTPException(404)
     isTop = u["role"] in ("head_admin","admin")
-    if ev["status"] in ("approved","scheduled","active","completed") and not isTop:
-        conn.close(); raise HTTPException(403, detail="Одобренные/активные ивенты может редактировать только Head Admin или Главный Ивентолог")
+    if ev["status"] == "approved" and not isTop:
+        conn.close(); raise HTTPException(403, detail="Одобренные ивенты редактирует только Гл. Ивентолог")
     if not p["can_edit_all"] and ev["author_id"] != u["id"]: conn.close(); raise HTTPException(403)
     ns = ev["status"] if isTop else "pending"
     nr = ev["reviewed_by"] if isTop else None
-    conn.execute("UPDATE events SET title=?,event_type=?,duration=?,location=?,organizer_name=?,short_desc=?,full_desc=?,rules_text=?,rewards_text=?,status=?,reviewed_by=?,event_date=?,event_time=? WHERE id=?",
-        (title,event_type,duration,location,organizer_name,short_desc,full_desc,rules_text,rewards_text,ns,nr,event_date or None,event_time or None,eid))
+    conn.execute("UPDATE events SET title=?,event_type=?,duration=?,location=?,organizer_name=?,short_desc=?,full_desc=?,rules_text=?,rewards_text=?,status=?,reviewed_by=? WHERE id=?",
+        (title,event_type,duration,location,organizer_name,short_desc,full_desc,rules_text,rewards_text,ns,nr,eid))
     conn.commit(); conn.close(); return {"success":True}
-
-@app.put("/api/events/{eid}/status")
-async def change_event_status(eid:int, req:Request, status:str=Form(...)):
-    u = get_current_user(req)
-    if not u: raise HTTPException(401)
-    if status not in STATUSES: raise HTTPException(400, detail="Неизвестный статус")
-    p = get_perms(u); conn = get_db()
-    ev = conn.execute("SELECT * FROM events WHERE id=?", (eid,)).fetchone()
-    if not ev: conn.close(); raise HTTPException(404)
-    need_approve = status in ("approved","scheduled","active","completed","archived")
-    if need_approve and not p["can_approve"] and u["role"] not in ("head_admin","admin"):
-        conn.close(); raise HTTPException(403, detail="Нет прав менять на этот статус")
-    rb = u["display_name"] if need_approve else ev["reviewed_by"]
-    conn.execute("UPDATE events SET status=?, reviewed_by=? WHERE id=?", (status, rb, eid))
-    conn.commit(); conn.close()
-    # Notify author
-    if ev["author_id"] != u["id"]:
-        sl = STATUSES.get(status,{})
-        notify(ev["author_id"], "status_change", f'{sl.get("icon","")} Ивент «{ev["title"]}» — {sl.get("label",status)} (от {u["display_name"]})', eid)
-    return {"success":True}
 
 @app.delete("/api/events/{eid}")
 async def delete_event(eid:int, req:Request):
@@ -294,8 +236,7 @@ async def delete_event(eid:int, req:Request):
     ev = conn.execute("SELECT * FROM events WHERE id=?", (eid,)).fetchone()
     if not ev: conn.close(); raise HTTPException(404)
     if not p["can_edit_all"] and ev["author_id"] != u["id"]: conn.close(); raise HTTPException(403)
-    for t in ("spawn_reports","comments"): conn.execute(f"DELETE FROM {t} WHERE event_id=?", (eid,))
-    conn.execute("DELETE FROM notifications WHERE event_id=?", (eid,))
+    for t in ("spawn_reports","comments","notifications"): conn.execute(f"DELETE FROM {t} WHERE event_id=?", (eid,))
     conn.execute("DELETE FROM events WHERE id=?", (eid,)); conn.commit(); conn.close()
     reorder_ids("events"); return {"success":True}
 
@@ -315,7 +256,7 @@ async def reject_event(eid:int, req:Request):
     if not u or not get_perms(u)["can_approve"]: raise HTTPException(403)
     conn = get_db(); ev = conn.execute("SELECT * FROM events WHERE id=?", (eid,)).fetchone()
     if not ev: conn.close(); raise HTTPException(404)
-    conn.execute("UPDATE events SET status='pending',reviewed_by=? WHERE id=?", (u["display_name"],eid)); conn.commit(); conn.close()
+    conn.execute("UPDATE events SET status='rejected',reviewed_by=? WHERE id=?", (u["display_name"],eid)); conn.commit(); conn.close()
     if ev["author_id"] != u["id"]: notify(ev["author_id"],"rejected",f'❌ Ивент «{ev["title"]}» отклонён ({u["display_name"]})',eid)
     return {"success":True}
 
@@ -330,14 +271,12 @@ async def add_comment(eid:int, req:Request, text:str=Form(...)):
     u = get_current_user(req)
     if not u: raise HTTPException(401)
     rd = get_role_data(u["role"])
-    conn = get_db()
-    ev = conn.execute("SELECT * FROM events WHERE id=?", (eid,)).fetchone()
+    conn = get_db(); ev = conn.execute("SELECT * FROM events WHERE id=?", (eid,)).fetchone()
     if not ev: conn.close(); raise HTTPException(404)
     conn.execute("INSERT INTO comments (event_id,user_id,user_name,user_role,text) VALUES (?,?,?,?,?)",
         (eid,u["id"],u["display_name"],rd["display_name"] if rd else u["role"],text.strip()))
     conn.commit(); conn.close()
-    if ev["author_id"] != u["id"]:
-        notify(ev["author_id"],"comment",f'💬 {u["display_name"]} прокомментировал «{ev["title"]}»',eid)
+    if ev["author_id"] != u["id"]: notify(ev["author_id"],"comment",f'💬 {u["display_name"]} прокомментировал «{ev["title"]}»',eid)
     return {"success":True}
 
 @app.delete("/api/comments/{cid}")
@@ -360,37 +299,18 @@ async def get_notifications(req:Request):
     conn.close(); return {"notifications":[dict(r) for r in rows],"unread":unread}
 
 @app.post("/api/notifications/read-all")
-async def read_all_notifications(req:Request):
+async def read_all(req:Request):
     u = get_current_user(req)
     if not u: raise HTTPException(401)
     conn = get_db(); conn.execute("UPDATE notifications SET is_read=1 WHERE user_id=?", (u["id"],)); conn.commit(); conn.close()
     return {"success":True}
 
 @app.get("/api/notifications/count")
-async def notification_count(req:Request):
+async def notif_count(req:Request):
     u = get_current_user(req)
     if not u: return {"count":0}
     conn = get_db(); cnt = conn.execute("SELECT COUNT(*) FROM notifications WHERE user_id=? AND is_read=0", (u["id"],)).fetchone()[0]; conn.close()
     return {"count":cnt}
-
-# ═══ STATS ═══
-@app.get("/api/stats")
-async def get_stats():
-    conn = get_db()
-    total = conn.execute("SELECT COUNT(*) FROM events").fetchone()[0]
-    by_status = {}
-    for s in STATUSES:
-        by_status[s] = conn.execute("SELECT COUNT(*) FROM events WHERE status=?", (s,)).fetchone()[0]
-    top_authors = conn.execute("SELECT users.display_name, COUNT(*) as cnt FROM events JOIN users ON events.author_id=users.id GROUP BY author_id ORDER BY cnt DESC LIMIT 5").fetchall()
-    top_spawn = conn.execute("SELECT item_name, SUM(quantity) as total FROM spawn_reports GROUP BY item_name ORDER BY total DESC LIMIT 5").fetchall()
-    total_users = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
-    total_comments = conn.execute("SELECT COUNT(*) FROM comments").fetchone()[0]
-    total_spawned = conn.execute("SELECT COALESCE(SUM(quantity),0) FROM spawn_reports").fetchone()[0]
-    conn.close()
-    return {"total_events":total,"by_status":by_status,"total_users":total_users,"total_comments":total_comments,
-            "total_spawned":total_spawned,
-            "top_authors":[{"name":r[0],"count":r[1]} for r in top_authors],
-            "top_spawn":[{"item":r[0],"total":r[1]} for r in top_spawn]}
 
 # ═══ SPAWN ═══
 @app.get("/api/spawn-whitelist")
@@ -451,7 +371,6 @@ async def create_user(req:Request, username:str=Form(...), password:str=Form(...
     u = get_current_user(req)
     if not u or not get_perms(u)["can_manage_users"]: raise HTTPException(403)
     conn = get_db()
-    if not conn.execute("SELECT 1 FROM roles WHERE role_key=?", (role,)).fetchone(): conn.close(); raise HTTPException(400, detail="Роль не существует")
     try: conn.execute("INSERT INTO users (username,password_hash,display_name,role) VALUES (?,?,?,?)", (username,h_pw(password),display_name,role)); conn.commit()
     except sqlite3.IntegrityError: conn.close(); raise HTTPException(400, detail="Логин занят")
     conn.close(); return {"success":True}
@@ -461,12 +380,9 @@ async def update_user_role(uid:int, req:Request, role:str=Form(...)):
     u = get_current_user(req)
     if not u or not get_perms(u)["can_manage_users"]: raise HTTPException(403)
     if u["id"] == uid: raise HTTPException(400, detail="Нельзя менять свою роль")
-    conn = get_db()
-    if not conn.execute("SELECT 1 FROM roles WHERE role_key=?", (role,)).fetchone(): conn.close(); raise HTTPException(400)
-    old_role = conn.execute("SELECT role FROM users WHERE id=?", (uid,)).fetchone()
-    conn.execute("UPDATE users SET role=? WHERE id=?", (role,uid)); conn.commit(); conn.close()
+    conn = get_db(); conn.execute("UPDATE users SET role=? WHERE id=?", (role,uid)); conn.commit(); conn.close()
     rd = get_role_data(role)
-    notify(uid,"role_change",f'🎭 Ваша роль изменена на «{rd["display_name"] if rd else role}» ({u["display_name"]})')
+    notify(uid,"role_change",f'🎭 Роль изменена на «{rd["display_name"] if rd else role}» ({u["display_name"]})')
     return {"success":True}
 
 @app.put("/api/users/{uid}/perms")

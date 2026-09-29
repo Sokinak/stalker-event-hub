@@ -5,24 +5,21 @@
 <title>Event Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@500;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--g1:#4ade80;--g2:#16a34a;--g3:#052e16;--g4:#14532d;--bg:#050f07;--bg2:#0a160b;--bg3:#0f1e10;--border:#1a3a1e;--text:#c6dfc9;--muted:#5a856a;--white:#eef5ee;--red:#ef4444;--amber:#f59e0b;--purple:#a78bfa;--blue:#3b82f6;--mono:'Share Tech Mono',monospace;--sans:'Barlow',sans-serif;--head:'Oswald',sans-serif}
+:root{--g1:#4ade80;--g2:#16a34a;--g3:#052e16;--g4:#14532d;--bg:#050f07;--bg2:#0a160b;--bg3:#0f1e10;--border:#1a3a1e;--text:#c6dfc9;--muted:#5a856a;--white:#eef5ee;--red:#ef4444;--amber:#f59e0b;--purple:#a78bfa;--mono:'Share Tech Mono',monospace;--sans:'Barlow',sans-serif;--head:'Oswald',sans-serif}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(74,222,128,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(74,222,128,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
 .topbar{position:sticky;top:0;z-index:100;background:rgba(5,15,7,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;height:52px;gap:12px}
 .topbar-brand{font-family:var(--head);font-size:1rem;font-weight:700;color:var(--g1);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0}
 .topbar-nav{display:flex;gap:3px;margin-left:20px;flex-wrap:wrap}
-.topbar-nav button{background:none;border:1px solid transparent;color:var(--muted);font-family:var(--mono);font-size:.65rem;letter-spacing:.05em;padding:6px 10px;border-radius:3px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.topbar-nav button{background:none;border:1px solid transparent;color:var(--muted);font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;padding:6px 12px;border-radius:3px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .topbar-nav button:hover,.topbar-nav button.active{color:var(--g1);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.topbar-user{font-family:var(--mono);font-size:.62rem;color:var(--muted)}.topbar-user b{color:var(--g1)}
-.btn-logout{background:none;border:1px solid rgba(239,68,68,.3);color:var(--red);font-family:var(--mono);font-size:.6rem;padding:4px 8px;border-radius:3px;cursor:pointer}
+.topbar-user{font-family:var(--mono);font-size:.65rem;color:var(--muted)}.topbar-user b{color:var(--g1)}
+.btn-logout{background:none;border:1px solid rgba(239,68,68,.3);color:var(--red);font-family:var(--mono);font-size:.62rem;padding:5px 10px;border-radius:3px;cursor:pointer}
 .bell{position:relative;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px}
-.bell .dot{position:absolute;top:0;right:0;width:8px;height:8px;background:var(--red);border-radius:50%;display:none}
-.bell.has .dot{display:block}
 .bell-count{position:absolute;top:-4px;right:-6px;background:var(--red);color:#fff;font-family:var(--mono);font-size:.5rem;padding:1px 4px;border-radius:6px;display:none}
-.bell.has .bell-count{display:block}
-main{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:32px 24px 80px}
+main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:32px 28px 80px}
 .login-wrap{display:flex;align-items:center;justify-content:center;min-height:80vh}
 .login-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:44px 40px;width:100%;max-width:380px;text-align:center}
 .login-box h2{font-family:var(--head);font-size:1.4rem;color:var(--white);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
@@ -32,475 +29,421 @@ main{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:32px 24px
 .login-box .btn-login{width:100%;padding:12px;background:var(--g2);color:#fff;font-family:var(--head);font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:4px;cursor:pointer}
 .login-box .btn-login:hover{background:var(--g1);color:var(--bg)}
 .login-err{color:var(--red);font-size:.82rem;margin-top:12px;min-height:20px}
+/* Cards */
 .cards{display:grid;gap:12px}
-.card{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--g4);border-radius:0 6px 6px 0;padding:16px 20px;cursor:pointer;transition:all .2s}
+.card{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--g4);border-radius:0 6px 6px 0;padding:18px 22px;cursor:pointer;transition:all .2s}
 .card:hover{background:var(--bg3)}
-.card-top{display:flex;align-items:center;flex-wrap:wrap;gap:5px 10px;margin-bottom:5px}
-.card-num{font-family:var(--mono);font-size:.9rem;color:var(--g1);font-weight:700}
-.card-title{font-family:var(--head);font-size:.95rem;font-weight:700;color:var(--white);text-transform:uppercase}
-.card-pills{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;align-items:center}
-.pill{font-family:var(--mono);font-size:.52rem;letter-spacing:.06em;color:var(--g1);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:99px;padding:2px 8px;white-space:nowrap}
-.sb{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:.58rem;padding:2px 8px;border-radius:3px;font-weight:700}
-.card-desc{font-size:.85rem;color:var(--text);line-height:1.6;margin-bottom:3px}
-.card-meta{font-family:var(--mono);font-size:.55rem;color:var(--muted)}
-.ev-hero{padding:24px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px}
-.ev-hero h1{font-family:var(--head);font-size:clamp(1.3rem,4vw,2rem);color:var(--white);text-transform:uppercase;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.ev-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.ev-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:20px}
-.ev-info-cell{background:var(--bg2);padding:10px 12px}
-.ev-info-cell .lbl{font-family:var(--mono);font-size:.5rem;letter-spacing:.18em;color:var(--g1);text-transform:uppercase;margin-bottom:2px}
-.ev-info-cell .val{font-size:.85rem;color:var(--white)}
-.ev-section{margin-bottom:20px}
-.ev-section-title{font-family:var(--head);font-size:.8rem;font-weight:700;color:var(--g1);text-transform:uppercase;letter-spacing:.1em;padding-bottom:6px;margin-bottom:10px;border-bottom:1px solid var(--border)}
-.ev-body{font-size:.9rem;line-height:1.7;color:var(--text)}
-.ev-note{background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.18);border-radius:4px;padding:10px 14px;font-size:.84rem;color:#86c997;line-height:1.6;white-space:pre-line}
-.btn-back{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.65rem;color:var(--muted);background:none;border:1px solid var(--border);padding:5px 10px;border-radius:3px;cursor:pointer;margin-bottom:14px}
+.card.approved{border-left-color:#16a34a;background:rgba(22,163,74,.04)}
+.card.rejected{border-left-color:#dc2626;background:rgba(220,38,38,.04)}
+.card.pending{border-left-color:#a16207}
+.card-top{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-bottom:6px}
+.card-num{font-family:var(--mono);font-size:1rem;color:var(--g1);font-weight:700}
+.card-title{font-family:var(--head);font-size:1rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:.04em}
+.card-pills{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.pill{font-family:var(--mono);font-size:.55rem;letter-spacing:.07em;color:var(--g1);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:99px;padding:2px 9px;white-space:nowrap}
+.sb{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.62rem;padding:3px 10px;border-radius:3px;font-weight:700}
+.sb.approved{color:#22c55e;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3)}
+.sb.rejected{color:#ef4444;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3)}
+.sb.pending{color:#eab308;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2)}
+.card-desc{font-size:.88rem;color:var(--text);line-height:1.65;margin-bottom:4px}
+.card-meta{font-family:var(--mono);font-size:.58rem;color:var(--muted)}
+/* Event detail */
+.ev-hero{padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.ev-hero h1{font-family:var(--head);font-size:clamp(1.5rem,4vw,2.2rem);color:var(--white);text-transform:uppercase;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ev-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.ev-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:24px}
+.ev-info-cell{background:var(--bg2);padding:12px 14px}
+.ev-info-cell .lbl{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;color:var(--g1);text-transform:uppercase;margin-bottom:3px}
+.ev-info-cell .val{font-size:.88rem;color:var(--white)}
+.ev-section{margin-bottom:24px}
+.ev-section-title{font-family:var(--head);font-size:.85rem;font-weight:700;color:var(--g1);text-transform:uppercase;letter-spacing:.12em;padding-bottom:7px;margin-bottom:12px;border-bottom:1px solid var(--border)}
+.ev-body{font-size:.92rem;line-height:1.75}.ev-body p{margin-bottom:8px}
+.ev-note{background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.18);border-radius:4px;padding:11px 15px;font-size:.85rem;color:#86c997;line-height:1.65;white-space:pre-line}
+.btn-back{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.68rem;color:var(--muted);background:none;border:1px solid var(--border);padding:5px 12px;border-radius:3px;cursor:pointer;margin-bottom:16px}
 .btn-back:hover{color:var(--g1);border-color:rgba(74,222,128,.3)}
-.ev-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
-.btn{font-family:var(--mono);font-size:.65rem;letter-spacing:.06em;padding:7px 14px;border-radius:4px;cursor:pointer;border:1px solid;transition:all .15s;display:inline-flex;align-items:center;gap:4px}
+.ev-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+/* Buttons */
+.btn{font-family:var(--mono);font-size:.68rem;letter-spacing:.07em;padding:8px 16px;border-radius:4px;cursor:pointer;border:1px solid;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
 .btn-green{background:var(--g2);color:#fff;border-color:var(--g2)}.btn-green:hover{background:var(--g1);color:var(--bg)}
 .btn-outline{background:none;color:var(--muted);border-color:var(--border)}.btn-outline:hover{color:var(--g1);border-color:rgba(74,222,128,.3)}
 .btn-red{background:none;color:var(--red);border-color:rgba(239,68,68,.3)}.btn-red:hover{background:rgba(239,68,68,.1)}
-.fg{margin-bottom:12px}.fg label{display:block;font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--g1);text-transform:uppercase;margin-bottom:4px}
-.fg input,.fg textarea,.fg select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--sans);font-size:.85rem;padding:9px 11px;border-radius:4px;outline:none}
+.btn-approve{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4)}.btn-approve:hover{background:rgba(34,197,94,.25)}
+.btn-reject{background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.3)}.btn-reject:hover{background:rgba(239,68,68,.18)}
+/* Forms */
+.fg{margin-bottom:14px}.fg label{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;color:var(--g1);text-transform:uppercase;margin-bottom:5px}
+.fg input,.fg textarea,.fg select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--sans);font-size:.88rem;padding:10px 12px;border-radius:4px;outline:none}
 .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--g2)}
-.fg textarea{min-height:100px;resize:vertical;line-height:1.6}.fg select{cursor:pointer}
+.fg textarea{min-height:110px;resize:vertical;line-height:1.6}.fg select{cursor:pointer}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.ucard{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;margin-bottom:8px}
-.rbadge{font-family:var(--mono);font-size:.52rem;padding:2px 7px;border-radius:3px;display:inline-block;border:1px solid}
-.tsel{background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--mono);font-size:.6rem;padding:3px 5px;border-radius:3px;cursor:pointer;outline:none}
-.tbtn{font-family:var(--mono);font-size:.55rem;padding:3px 7px;border-radius:3px;cursor:pointer;border:1px solid;transition:all .15s;background:none}
-/* Status progress */
-.status-flow{display:flex;gap:0;margin:14px 0;flex-wrap:wrap}
-.sf-step{font-family:var(--mono);font-size:.55rem;padding:5px 10px;border:1px solid var(--border);cursor:pointer;transition:all .15s;background:var(--bg2);color:var(--muted)}
-.sf-step:first-child{border-radius:4px 0 0 4px}.sf-step:last-child{border-radius:0 4px 4px 0}
-.sf-step.current{font-weight:700;border-color:currentColor}
-.sf-step:hover{background:var(--bg3)}
-/* Calendar */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cal-head{font-family:var(--mono);font-size:.55rem;color:var(--g1);text-align:center;padding:6px}
-.cal-day{background:var(--bg2);border:1px solid var(--border);min-height:70px;padding:4px;border-radius:3px;font-size:.7rem;cursor:pointer;transition:background .15s}
-.cal-day:hover{background:var(--bg3)}
-.cal-day.today{border-color:var(--g1)}
-.cal-day.other{opacity:.3}
-.cal-day .day-num{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:2px}
-.cal-day.today .day-num{color:var(--g1);font-weight:700}
-.cal-ev{font-family:var(--mono);font-size:.48rem;padding:1px 3px;border-radius:2px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-/* Comment */
+/* User cards */
+.ucard{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:16px 18px;margin-bottom:10px}
+.rbadge{font-family:var(--mono);font-size:.54rem;padding:3px 8px;border-radius:3px;display:inline-block;border:1px solid}
+.tsel{background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--mono);font-size:.62rem;padding:4px 6px;border-radius:3px;cursor:pointer;outline:none}
+.tbtn{font-family:var(--mono);font-size:.58rem;padding:3px 8px;border-radius:3px;cursor:pointer;border:1px solid;transition:all .15s;background:none}
+/* Comments */
 .comment{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:8px}
 .comment-head{display:flex;gap:8px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
 .comment-name{font-size:.85rem;color:var(--white);font-weight:500}
-.comment-role{font-family:var(--mono);font-size:.5rem;color:var(--muted)}
-.comment-time{font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-left:auto}
-.comment-text{font-size:.85rem;line-height:1.6;color:var(--text)}
-/* Stats */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:24px}
-.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:16px;text-align:center}
-.stat-num{font-family:var(--head);font-size:1.8rem;color:var(--g1)}
-.stat-label{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
-.stat-bar{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.stat-bar-label{font-family:var(--mono);font-size:.62rem;color:var(--text);width:120px;text-align:right;flex-shrink:0}
-.stat-bar-fill{height:16px;border-radius:3px;min-width:2px;transition:width .4s}
-.stat-bar-val{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
-/* Notifications dropdown */
-.notif-dropdown{position:absolute;top:48px;right:20px;width:340px;max-height:400px;overflow-y:auto;background:var(--bg2);border:1px solid var(--border);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:200;display:none}
-.notif-dropdown.open{display:block}
-.notif-item{padding:10px 14px;border-bottom:1px solid var(--border);font-size:.78rem;color:var(--text);cursor:pointer;transition:background .15s}
+.comment-role{font-family:var(--mono);font-size:.52rem;color:var(--muted)}
+.comment-time{font-family:var(--mono);font-size:.52rem;color:var(--muted);margin-left:auto}
+.comment-text{font-size:.85rem;line-height:1.6}
+/* Spawn */
+.spawn-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:6px}
+.sr-row{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-bottom:6px;flex-wrap:wrap}
+/* Roles */
+.role-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:14px 18px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rc-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.rc-perm{font-family:var(--mono);font-size:.52rem;padding:2px 6px;border-radius:2px}
+.rc-perm.on{color:var(--g1);background:rgba(74,222,128,.08)}.rc-perm.off{color:#555;background:rgba(255,255,255,.02)}
+/* Notifications */
+.notif-dd{position:absolute;top:52px;right:20px;width:340px;max-height:400px;overflow-y:auto;background:var(--bg2);border:1px solid var(--border);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:200;display:none}
+.notif-dd.open{display:block}
+.notif-item{padding:10px 14px;border-bottom:1px solid var(--border);font-size:.78rem;cursor:pointer}
 .notif-item:hover{background:var(--bg3)}
 .notif-item.unread{border-left:3px solid var(--g1)}
 .notif-time{font-family:var(--mono);font-size:.5rem;color:var(--muted);margin-top:3px}
-.notif-header{padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
-.notif-header span{font-family:var(--mono);font-size:.6rem;color:var(--g1);letter-spacing:.1em}
-.spawn-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:9px 14px;margin-bottom:5px}
-.sr-row{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:9px 14px;margin-bottom:5px;flex-wrap:wrap}
-.role-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.rc-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.rc-perm{font-family:var(--mono);font-size:.5rem;padding:2px 5px;border-radius:2px}
-.rc-perm.on{color:var(--g1);background:rgba(74,222,128,.08)}.rc-perm.off{color:#555;background:rgba(255,255,255,.02)}
-
+/* Misc */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--g2);border-radius:6px;padding:12px 20px;font-family:var(--mono);font-size:.76rem;color:var(--g1);z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s}
 .toast.show{transform:translateY(0);opacity:1}.toast.error{border-color:var(--red);color:var(--red)}
-.page-title{font-family:var(--head);font-size:1.1rem;color:var(--white);text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.page-title .cnt{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
-.empty{text-align:center;padding:40px 20px;color:var(--muted)}.empty .big{font-size:2.5rem;margin-bottom:10px}
-footer{position:relative;z-index:1;text-align:center;padding:16px;font-family:var(--mono);font-size:.55rem;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
-@media(max-width:580px){.topbar{padding:6px 10px;height:auto;flex-wrap:wrap} main{padding:16px 10px 60px} .fr,.fr3{grid-template-columns:1fr} .cal-grid{grid-template-columns:repeat(7,1fr)} .stat-grid{grid-template-columns:1fr 1fr}}
+.page-title{font-family:var(--head);font-size:1.2rem;color:var(--white);text-transform:uppercase;letter-spacing:.06em;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.page-title .cnt{font-family:var(--mono);font-size:.65rem;color:var(--muted)}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}.empty .big{font-size:2.5rem;margin-bottom:10px}
+footer{position:relative;z-index:1;text-align:center;padding:18px;font-family:var(--mono);font-size:.58rem;color:var(--muted);border-top:1px solid var(--border);margin-top:50px}
+@media(max-width:580px){.topbar{padding:8px 12px;height:auto;flex-wrap:wrap} main{padding:20px 12px 60px} .fr{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="topbar" id="topbar" style="display:none">
   <span class="topbar-brand">Event Hub</span>
   <div class="topbar-nav">
-    <button onclick="SP('dash')" id="nav-dash">📊</button>
-    <button onclick="SP('events')" id="nav-events">Ивенты</button>
-    <button onclick="SP('my')" id="nav-my">Мои</button>
-    <button onclick="SP('calendar')" id="nav-calendar">📅 Календарь</button>
+    <button onclick="SP('events')" id="nav-events">Все ивенты</button>
+    <button onclick="SP('my')" id="nav-my">Мои ивенты</button>
     <button onclick="SP('create')" id="nav-create">Создать</button>
-    <button onclick="SP('spawn')" id="nav-spawn">Спавн</button>
+    <button onclick="SP('spawn')" id="nav-spawn">Спавн-лист</button>
     <button onclick="SP('users')" id="nav-users" style="display:none">Юзеры</button>
     <button onclick="SP('roles')" id="nav-roles" style="display:none">Роли</button>
   </div>
   <div class="topbar-right">
-    <button class="bell" id="bell-btn" onclick="toggleNotif()">🔔<span class="dot"></span><span class="bell-count" id="bell-count">0</span></button>
+    <button class="bell" id="bell-btn" onclick="toggleNotif()">🔔<span class="bell-count" id="bell-count">0</span></button>
     <span class="topbar-user" id="topbar-user"></span>
     <button class="btn-logout" onclick="logout()">Выход</button>
   </div>
 </div>
-<div class="notif-dropdown" id="notif-dd"></div>
+<div class="notif-dd" id="notif-dd"></div>
 <main id="app"></main>
 <div class="toast" id="toast"></div>
 <script>
-let U=null,ROLES=[],ST={};
+let U=null,ROLES=[];
 const $=id=>document.getElementById(id);
+const SL={approved:{i:'✅',t:'Одобрен',c:'approved'},rejected:{i:'❌',t:'Отклонён',c:'rejected'},pending:{i:'⏳',t:'На проверке',c:'pending'}};
 function esc(s){if(s==null)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function escTA(s){return(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function toast(m,e){const t=$('toast');t.textContent=m;t.className='toast show'+(e?' error':'');setTimeout(()=>t.className='toast',3000)}
-function stb(s){const o=ST[s]||ST.pending||{label:s,icon:'?',color:'#888'};return`<span class="sb" style="color:${o.color};background:${o.color}18;border:1px solid ${o.color}40">${o.icon} ${o.label}</span>`}
-function roleBadge(rk){const r=ROLES.find(x=>x.role_key===rk);if(!r)return`<span class="rbadge" style="color:var(--muted);border-color:var(--border)">${esc(rk)}</span>`;return`<span class="rbadge" style="color:${r.color};border-color:${r.color}40;background:${r.color}15">${esc(r.display_name)}</span>`}
+function stb(s){const o=SL[s]||SL.pending;return'<span class="sb '+o.c+'">'+o.i+' '+o.t+'</span>'}
+function roleBadge(rk){const r=ROLES.find(function(x){return x.role_key===rk});if(!r)return'<span class="rbadge" style="color:var(--muted);border-color:var(--border)">'+esc(rk)+'</span>';return'<span class="rbadge" style="color:'+r.color+';border-color:'+r.color+'40;background:'+r.color+'15">'+esc(r.display_name)+'</span>'}
 
 async function init(){
-  [ROLES,ST]=await Promise.all([fetch('/api/roles').then(r=>r.json()),fetch('/api/statuses').then(r=>r.json())]);
-  const d=await(await fetch('/api/me')).json();if(d.authenticated){U=d;onLogin()}else showLogin();
+  try{ROLES=await(await fetch('/api/roles')).json()}catch(e){ROLES=[]}
+  var d=await(await fetch('/api/me')).json();
+  if(d.authenticated){U=d;onLogin()}else{showLogin()}
 }
 function onLogin(){
   $('topbar').style.display='flex';
-  $('topbar-user').innerHTML=`<b>${U.display_name}</b>`;
+  $('topbar-user').innerHTML='<b>'+U.display_name+'</b> · '+U.role_display;
   $('nav-users').style.display=U.can_manage_users?'':'none';
   $('nav-roles').style.display=U.can_manage_roles?'':'none';
-  pollNotif(); SP('dash');
+  pollNotif();
+  SP('events');
 }
 function showLogin(){
   $('topbar').style.display='none';
-  $('app').innerHTML=`<div class="login-wrap"><div class="login-box"><h2>Event Hub</h2><p class="sub">Панель управления ивентами</p><input type="text" id="l-u" placeholder="Логин" autocomplete="username"><input type="password" id="l-p" placeholder="Пароль" autocomplete="current-password"><button class="btn-login" onclick="doLogin()">Войти</button><div class="login-err" id="l-e"></div></div></div>`;
-  $('l-u').focus();$('l-p').onkeypress=e=>{if(e.key==='Enter')doLogin()};
+  $('app').innerHTML='<div class="login-wrap"><div class="login-box"><h2>Event Hub</h2><p class="sub">Панель управления ивентами</p><input type="text" id="l-u" placeholder="Логин" autocomplete="username"><input type="password" id="l-p" placeholder="Пароль" autocomplete="current-password"><button class="btn-login" onclick="doLogin()">Войти</button><div class="login-err" id="l-e"></div></div></div>';
+  $('l-u').focus();
+  $('l-p').onkeypress=function(e){if(e.key==='Enter')doLogin()};
 }
 async function doLogin(){
-  const u=$('l-u').value.trim(),p=$('l-p').value;if(!u||!p)return;
-  const fd=new FormData();fd.append('username',u);fd.append('password',p);
-  const d=await(await fetch('/api/login',{method:'POST',body:fd})).json();
+  var u=$('l-u').value.trim(),p=$('l-p').value;if(!u||!p)return;
+  var fd=new FormData();fd.append('username',u);fd.append('password',p);
+  var d=await(await fetch('/api/login',{method:'POST',body:fd})).json();
   if(d.error){$('l-e').textContent=d.error;return}
-  [ROLES,ST]=await Promise.all([fetch('/api/roles').then(r=>r.json()),fetch('/api/statuses').then(r=>r.json())]);
+  try{ROLES=await(await fetch('/api/roles')).json()}catch(e){ROLES=[]}
   U=await(await fetch('/api/me')).json();onLogin();
 }
 async function logout(){await fetch('/api/logout',{method:'POST'});U=null;showLogin()}
 
 function SP(p){
-  document.querySelectorAll('.topbar-nav button').forEach(b=>b.classList.remove('active'));
-  const n=$('nav-'+p);if(n)n.classList.add('active');
+  document.querySelectorAll('.topbar-nav button').forEach(function(b){b.classList.remove('active')});
+  var n=$('nav-'+p);if(n)n.classList.add('active');
   $('notif-dd').classList.remove('open');
-  ({dash:loadDash,events:loadEvents,my:loadMyEvents,calendar:loadCalendar,create:showEventForm,spawn:loadSpawnList,users:loadUsers,roles:loadRoles}[p]||loadEvents)();
+  if(p==='events')loadEvents();
+  else if(p==='my')loadMyEvents();
+  else if(p==='create')showEventForm(null);
+  else if(p==='spawn')loadSpawnList();
+  else if(p==='users')loadUsers();
+  else if(p==='roles')loadRoles();
 }
 
 // ═══ NOTIFICATIONS ═══
 async function pollNotif(){
-  try{const d=await(await fetch('/api/notifications/count')).json();
-  const b=$('bell-btn'),bc=$('bell-count');
-  if(d.count>0){b.classList.add('has');bc.textContent=d.count;bc.style.display='block'}
-  else{b.classList.remove('has');bc.style.display='none'}}catch{}
+  try{
+    var d=await(await fetch('/api/notifications/count')).json();
+    var bc=$('bell-count');
+    if(d.count>0){bc.textContent=d.count;bc.style.display='block'}
+    else{bc.style.display='none'}
+  }catch(e){}
   setTimeout(pollNotif,15000);
 }
 async function toggleNotif(){
-  const dd=$('notif-dd');
+  var dd=$('notif-dd');
   if(dd.classList.contains('open')){dd.classList.remove('open');return}
-  const d=await(await fetch('/api/notifications')).json();
-  let h=`<div class="notif-header"><span>🔔 Уведомления</span><button class="tbtn" style="color:var(--g1);border-color:rgba(74,222,128,.3)" onclick="readAllNotif()">Прочитать все</button></div>`;
-  if(!d.notifications.length)h+=`<div style="padding:20px;text-align:center;color:var(--muted);font-size:.8rem">Нет уведомлений</div>`;
-  else d.notifications.forEach(n=>{
-    h+=`<div class="notif-item ${n.is_read?'':'unread'}" ${n.event_id?`onclick="$('notif-dd').classList.remove('open');viewEvent(${n.event_id})"`:''}>${esc(n.message)}<div class="notif-time">${n.created_at}</div></div>`;
-  });
+  var d=await(await fetch('/api/notifications')).json();
+  var h='<div style="padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)"><span style="font-family:var(--mono);font-size:.62rem;color:var(--g1)">🔔 Уведомления</span><button class="tbtn" style="color:var(--g1);border-color:rgba(74,222,128,.3)" onclick="readAllNotif()">✓ Все</button></div>';
+  if(!d.notifications.length){h+='<div style="padding:20px;text-align:center;color:var(--muted);font-size:.8rem">Нет уведомлений</div>'}
+  else{d.notifications.forEach(function(n){
+    h+='<div class="notif-item '+(n.is_read?'':'unread')+'" '+(n.event_id?'onclick="$(\'notif-dd\').classList.remove(\'open\');viewEvent('+n.event_id+')"':'')+'>'+esc(n.message)+'<div class="notif-time">'+n.created_at+'</div></div>';
+  })}
   dd.innerHTML=h;dd.classList.add('open');
 }
 async function readAllNotif(){
   await fetch('/api/notifications/read-all',{method:'POST'});
-  $('bell-btn').classList.remove('has');$('bell-count').style.display='none';
-  $('notif-dd').classList.remove('open');toast('Прочитано');
+  $('bell-count').style.display='none';$('notif-dd').classList.remove('open');toast('Прочитано');
 }
-document.addEventListener('click',e=>{if(!e.target.closest('.bell')&&!e.target.closest('.notif-dropdown'))$('notif-dd').classList.remove('open')});
-
-// ═══ DASHBOARD ═══
-async function loadDash(){
-  const s=await(await fetch('/api/stats')).json();
-  let h=`<div class="page-title">📊 Статистика</div>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-num">${s.total_events}</div><div class="stat-label">Ивентов</div></div>
-      <div class="stat-card"><div class="stat-num">${s.total_users}</div><div class="stat-label">Юзеров</div></div>
-      <div class="stat-card"><div class="stat-num">${s.total_comments}</div><div class="stat-label">Комментов</div></div>
-      <div class="stat-card"><div class="stat-num">${s.total_spawned}</div><div class="stat-label">Заспавнено</div></div>
-    </div>`;
-  // Status breakdown
-  h+=`<div class="ev-section"><div class="ev-section-title">По статусам</div>`;
-  const mx=Math.max(...Object.values(s.by_status),1);
-  for(const[k,v]of Object.entries(s.by_status)){
-    const si=ST[k]||{icon:'?',label:k,color:'#888'};
-    h+=`<div class="stat-bar"><div class="stat-bar-label">${si.icon} ${si.label}</div><div class="stat-bar-fill" style="width:${v/mx*200}px;background:${si.color}"></div><div class="stat-bar-val">${v}</div></div>`;
-  }
-  h+=`</div>`;
-  // Top authors
-  if(s.top_authors.length){
-    h+=`<div class="ev-section"><div class="ev-section-title">🏆 Топ авторов</div>`;
-    const ma=Math.max(...s.top_authors.map(a=>a.count),1);
-    s.top_authors.forEach((a,i)=>{h+=`<div class="stat-bar"><div class="stat-bar-label">${i+1}. ${esc(a.name)}</div><div class="stat-bar-fill" style="width:${a.count/ma*200}px;background:var(--g1)"></div><div class="stat-bar-val">${a.count}</div></div>`});
-    h+=`</div>`;
-  }
-  // Top spawn
-  if(s.top_spawn.length){
-    h+=`<div class="ev-section"><div class="ev-section-title">📦 Топ спавна</div>`;
-    const ms=Math.max(...s.top_spawn.map(x=>x.total),1);
-    s.top_spawn.forEach(x=>{h+=`<div class="stat-bar"><div class="stat-bar-label">${esc(x.item)}</div><div class="stat-bar-fill" style="width:${x.total/ms*200}px;background:var(--amber)"></div><div class="stat-bar-val">${x.total}</div></div>`});
-    h+=`</div>`;
-  }
-  $('app').innerHTML=h;
-}
+document.addEventListener('click',function(e){if(!e.target.closest('.bell')&&!e.target.closest('.notif-dd'))$('notif-dd').classList.remove('open')});
 
 // ═══ EVENTS ═══
-function renderCards(evs,title,empty){
-  if(!evs.length){$('app').innerHTML=`<div class="page-title">${title}</div><div class="empty"><div class="big">📭</div><p>${empty}</p></div>`;return}
-  let h=`<div class="page-title">${title} <span class="cnt">(${evs.length})</span></div><div class="cards">`;
-  evs.forEach((ev,i)=>{const st=ev.status||'pending';const si=ST[st]||{};
-    h+=`<div class="card" style="border-left-color:${si.color||'var(--g4)'}" onclick="viewEvent(${ev.id})">
-      <div class="card-top"><span class="card-num">№${evs.length-i}</span><span class="card-title">${esc(ev.title)}</span>
-      <div class="card-pills">${stb(st)}<span class="pill">${esc(ev.event_type)}</span>${ev.event_date?`<span class="pill">📅 ${ev.event_date}${ev.event_time?' '+ev.event_time:''}</span>`:''}</div></div>
-      <div class="card-desc">${esc(ev.short_desc)}</div>
-      <div class="card-meta">📍 ${esc(ev.location)} · 👤 ${esc(ev.author_name)}${ev.reviewed_by?' · ✓ '+esc(ev.reviewed_by):''}</div></div>`;
-  });h+='</div>';$('app').innerHTML=h;
+function renderCards(evs,title,emptyMsg){
+  var a=$('app');
+  if(!evs.length){a.innerHTML='<div class="page-title">'+title+'</div><div class="empty"><div class="big">📭</div><p>'+emptyMsg+'</p></div>';return}
+  var h='<div class="page-title">'+title+' <span class="cnt">('+evs.length+')</span></div><div class="cards">';
+  for(var i=0;i<evs.length;i++){
+    var ev=evs[i];var st=ev.status||'pending';var num=evs.length-i;
+    h+='<div class="card '+st+'" data-id="'+ev.id+'">';
+    h+='<div class="card-top"><span class="card-num">№'+num+'</span><span class="card-title">'+esc(ev.title)+'</span>';
+    h+='<div class="card-pills">'+stb(st)+'<span class="pill">'+esc(ev.event_type)+'</span><span class="pill">'+esc(ev.duration)+'</span></div></div>';
+    h+='<div class="card-desc">'+esc(ev.short_desc)+'</div>';
+    h+='<div class="card-meta">📍 '+esc(ev.location)+' · 👤 '+esc(ev.organizer_name)+' · '+esc(ev.author_name)+(ev.reviewed_by?' · ✓ '+esc(ev.reviewed_by):'')+'</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+  a.innerHTML=h;
+  // Attach click handlers after rendering
+  var cards=a.querySelectorAll('.card');
+  cards.forEach(function(card){
+    card.addEventListener('click',function(){
+      var id=parseInt(this.getAttribute('data-id'));
+      viewEvent(id);
+    });
+  });
 }
-async function loadEvents(){renderCards(await(await fetch('/api/events')).json(),'Все ивенты','Ивенты не созданы.')}
-async function loadMyEvents(){renderCards(await(await fetch('/api/events/my')).json(),'Мои ивенты','У вас нет ивентов.')}
+
+async function loadEvents(){
+  var evs=await(await fetch('/api/events')).json();
+  renderCards(evs,'Все ивенты','Ивенты пока не созданы.');
+}
+async function loadMyEvents(){
+  var evs=await(await fetch('/api/events/my')).json();
+  renderCards(evs,'Мои ивенты','У вас пока нет ивентов.');
+}
 
 async function viewEvent(id){
-  const ev=await(await fetch('/api/events/'+id)).json();
-  const st=ev.status||'pending';const isA=U&&U.id===ev.author_id;
-  const isTop=U&&(U.role==='head_admin'||U.role==='admin');
-  const canEdit=U&&(isTop||(!'approved scheduled active completed'.split(' ').includes(st)&&(U.can_edit_all||isA)));
-  const canStatus=U&&(U.can_approve||isTop);
-  let h=`<button class="btn-back" onclick="SP('events')">← Назад</button>
-    <div class="ev-hero"><h1>${esc(ev.title)} ${stb(st)}</h1>
-    <div class="ev-pills"><span class="pill">${esc(ev.event_type)}</span><span class="pill">${esc(ev.duration)}</span>${ev.event_date?`<span class="pill">📅 ${ev.event_date}${ev.event_time?' '+ev.event_time:''}</span>`:''}</div></div>`;
-  // Status flow
-  if(canStatus){
-    h+=`<div class="status-flow">`;
-    for(const[k,v]of Object.entries(ST)){
-      const cur=k===st;
-      h+=`<div class="sf-step${cur?' current':''}" style="${cur?`color:${v.color};border-color:${v.color};background:${v.color}15`:''}" onclick="changeStatus(${ev.id},'${k}')">${v.icon} ${v.label}</div>`;
-    }
-    h+=`</div>`;
-  }
-  h+=`<div class="ev-info">
-    <div class="ev-info-cell"><div class="lbl">Локация</div><div class="val">${esc(ev.location)}</div></div>
-    <div class="ev-info-cell"><div class="lbl">Организатор</div><div class="val">${esc(ev.organizer_name)}</div></div>
-    <div class="ev-info-cell"><div class="lbl">Автор</div><div class="val">${esc(ev.author_name)}</div></div>
-    <div class="ev-info-cell"><div class="lbl">Проверил</div><div class="val">${ev.reviewed_by?esc(ev.reviewed_by):'—'}</div></div>
-    ${ev.event_date?`<div class="ev-info-cell"><div class="lbl">Дата</div><div class="val">${ev.event_date}${ev.event_time?' '+ev.event_time:''}</div></div>`:''}
-  </div>
-  <div class="ev-section"><div class="ev-section-title">📡 Краткое описание</div><div class="ev-body"><p>${esc(ev.short_desc)}</p></div></div>
-  <div class="ev-section"><div class="ev-section-title">📋 Полное описание</div><div class="ev-body">${ev.full_desc}</div></div>`;
-  if(ev.rules_text)h+=`<div class="ev-section"><div class="ev-section-title">⚠ Правила</div><div class="ev-note">${esc(ev.rules_text)}</div></div>`;
-  if(ev.rewards_text)h+=`<div class="ev-section"><div class="ev-section-title">🏆 Награды</div><div class="ev-note">${esc(ev.rewards_text)}</div></div>`;
+  var ev=await(await fetch('/api/events/'+id)).json();
+  var st=ev.status||'pending';
+  var isA=U&&U.id===ev.author_id;
+  var isTop=U&&(U.role==='head_admin'||U.role==='admin');
+  var canEdit=U&&(isTop||(st!=='approved'&&(U.can_edit_all||isA)));
+  var canReview=U&&U.can_approve;
+
+  var h='<button class="btn-back" onclick="SP(\'events\')">← Назад</button>';
+  h+='<div class="ev-hero"><h1>'+esc(ev.title)+' '+stb(st)+'</h1>';
+  h+='<div class="ev-pills"><span class="pill">'+esc(ev.event_type)+'</span><span class="pill">'+esc(ev.duration)+'</span></div></div>';
+  h+='<div class="ev-info">';
+  h+='<div class="ev-info-cell"><div class="lbl">Локация</div><div class="val">'+esc(ev.location)+'</div></div>';
+  h+='<div class="ev-info-cell"><div class="lbl">Организатор</div><div class="val">'+esc(ev.organizer_name)+'</div></div>';
+  h+='<div class="ev-info-cell"><div class="lbl">Автор</div><div class="val">'+esc(ev.author_name)+'</div></div>';
+  h+='<div class="ev-info-cell"><div class="lbl">Проверил</div><div class="val">'+(ev.reviewed_by?esc(ev.reviewed_by):'—')+'</div></div>';
+  h+='</div>';
+  h+='<div class="ev-section"><div class="ev-section-title">📡 Краткое описание</div><div class="ev-body"><p>'+esc(ev.short_desc)+'</p></div></div>';
+  h+='<div class="ev-section"><div class="ev-section-title">📋 Полное описание</div><div class="ev-body">'+ev.full_desc+'</div></div>';
+  if(ev.rules_text)h+='<div class="ev-section"><div class="ev-section-title">⚠ Правила</div><div class="ev-note">'+esc(ev.rules_text)+'</div></div>';
+  if(ev.rewards_text)h+='<div class="ev-section"><div class="ev-section-title">🏆 Награды</div><div class="ev-note">'+esc(ev.rewards_text)+'</div></div>';
+
   h+='<div class="ev-actions">';
-  if(canEdit)h+=`<button class="btn btn-outline" onclick="editEvent(${ev.id})">✏ Редактировать</button>`;
-  if(canEdit||isTop)h+=`<button class="btn btn-red" onclick="deleteEvent(${ev.id})">🗑 Удалить</button>`;
-  h+=`</div>`;
-  // Spawn reports
-  h+=`<div class="ev-section" style="margin-top:28px"><div class="ev-section-title">📦 Отчёт о спавне</div><div id="spawn-rpt"></div></div>`;
-  // Comments
-  h+=`<div class="ev-section"><div class="ev-section-title">💬 Комментарии</div><div id="comments-sec"></div></div>`;
+  if(canReview&&st!=='approved')h+='<button class="btn btn-approve" onclick="reviewEv('+ev.id+',\'approve\')">✅ Одобрить</button>';
+  if(canReview&&st!=='rejected')h+='<button class="btn btn-reject" onclick="reviewEv('+ev.id+',\'reject\')">❌ Отклонить</button>';
+  if(canEdit)h+='<button class="btn btn-outline" onclick="editEvent('+ev.id+')">✏ Редактировать</button>';
+  if(canEdit||isTop)h+='<button class="btn btn-red" onclick="deleteEvent('+ev.id+')">🗑 Удалить</button>';
+  if(st==='approved'&&!isTop&&isA)h+='<span style="font-family:var(--mono);font-size:.65rem;color:var(--muted);margin-left:8px">🔒 Одобрен — редактирование заблокировано</span>';
+  h+='</div>';
+
+  h+='<div class="ev-section" style="margin-top:32px"><div class="ev-section-title">📦 Отчёт о спавне</div><div id="spawn-rpt"></div></div>';
+  h+='<div class="ev-section"><div class="ev-section-title">💬 Комментарии</div><div id="comments-sec"></div></div>';
+
   $('app').innerHTML=h;
   loadSpawnReports(ev.id,isA||U.can_edit_all||isTop);
   loadComments(ev.id);
 }
 
-async function changeStatus(eid,status){
-  const fd=new FormData();fd.append('status',status);
-  const d=await(await fetch(`/api/events/${eid}/status`,{method:'PUT',body:fd})).json();
-  if(d.success){toast(`Статус: ${ST[status]?.icon||''} ${ST[status]?.label||status}`);viewEvent(eid)}else toast(d.detail||'Ошибка',1);
+async function reviewEv(id,action){
+  var d=await(await fetch('/api/events/'+id+'/'+action,{method:'POST'})).json();
+  if(d.success){toast(action==='approve'?'Одобрен ✅':'Отклонён ❌');viewEvent(id)}else toast(d.detail||'Ошибка',1);
 }
+
+function showEventForm(ev){
+  var isE=!!ev;
+  var h='<button class="btn-back" onclick="SP(\'events\')">← Назад</button>';
+  h+='<div class="page-title">'+(isE?'Редактирование':'Новый ивент')+'</div>';
+  h+='<form id="ef" onsubmit="saveEv(event,'+(isE?ev.id:0)+')">';
+  h+='<div class="fr"><div class="fg"><label>Название</label><input name="title" value="'+(isE?esc(ev.title):'')+'" required></div>';
+  h+='<div class="fg"><label>Тип</label><input name="event_type" value="'+(isE?esc(ev.event_type):'')+'" placeholder="Сюжетный / Поисковый" required></div></div>';
+  h+='<div class="fr"><div class="fg"><label>Продолжительность</label><input name="duration" value="'+(isE?esc(ev.duration):'')+'" placeholder="2–3 часа" required></div>';
+  h+='<div class="fg"><label>Локация</label><input name="location" value="'+(isE?esc(ev.location):'')+'" required></div></div>';
+  h+='<div class="fg"><label>Организатор</label><input name="organizer_name" value="'+(isE?esc(ev.organizer_name):(U?U.display_name:''))+'" required></div>';
+  h+='<div class="fg"><label>Краткое описание</label><textarea name="short_desc" rows="3" required>'+(isE?esc(ev.short_desc):'')+'</textarea></div>';
+  h+='<div class="fg"><label>Полное описание (HTML)</label><textarea name="full_desc" rows="10" required>'+(isE?escTA(ev.full_desc):'')+'</textarea></div>';
+  h+='<div class="fg"><label>Правила</label><textarea name="rules_text" rows="3">'+(isE?esc(ev.rules_text||''):'')+'</textarea></div>';
+  h+='<div class="fg"><label>Награды</label><textarea name="rewards_text" rows="3">'+(isE?esc(ev.rewards_text||''):'')+'</textarea></div>';
+  h+='<div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">'+(isE?'💾 Сохранить':'➕ Создать')+'</button><button type="button" class="btn btn-outline" onclick="SP(\'events\')">Отмена</button></div></form>';
+  $('app').innerHTML=h;
+}
+async function editEvent(id){var ev=await(await fetch('/api/events/'+id)).json();showEventForm(ev);document.querySelectorAll('.topbar-nav button').forEach(function(b){b.classList.remove('active')})}
+async function saveEv(e,eid){e.preventDefault();var fd=new FormData($('ef'));var d=await(await fetch(eid?'/api/events/'+eid:'/api/events',{method:eid?'PUT':'POST',body:fd})).json();if(d.success){toast(eid?'Сохранено!':'Создан!');SP('events')}else toast(d.detail||'Ошибка',1)}
+async function deleteEvent(id){if(!confirm('Удалить ивент?'))return;var d=await(await fetch('/api/events/'+id,{method:'DELETE'})).json();if(d.success){toast('Удалён');SP('events')}else toast(d.detail||'Ошибка',1)}
 
 // ═══ COMMENTS ═══
 async function loadComments(eid){
-  const comments=await(await fetch(`/api/events/${eid}/comments`)).json();
-  let h='';
-  comments.forEach(c=>{
-    const canDel=U&&(U.id===c.user_id||U.can_edit_all||U.role==='head_admin');
-    h+=`<div class="comment"><div class="comment-head"><span class="comment-name">${esc(c.user_name)}</span><span class="comment-role">${esc(c.user_role)}</span><span class="comment-time">${c.created_at}</span>
-    ${canDel?`<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="delComment(${c.id},${eid})">✕</button>`:''}</div>
-    <div class="comment-text">${esc(c.text)}</div></div>`;
+  var comments=await(await fetch('/api/events/'+eid+'/comments')).json();
+  var h='';
+  comments.forEach(function(c){
+    var canDel=U&&(U.id===c.user_id||U.can_edit_all||U.role==='head_admin');
+    h+='<div class="comment"><div class="comment-head"><span class="comment-name">'+esc(c.user_name)+'</span><span class="comment-role">'+esc(c.user_role)+'</span><span class="comment-time">'+c.created_at+'</span>';
+    if(canDel)h+='<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="delComment('+c.id+','+eid+')">✕</button>';
+    h+='</div><div class="comment-text">'+esc(c.text)+'</div></div>';
   });
-  h+=`<form onsubmit="addComment(event,${eid})" style="margin-top:10px;display:flex;gap:6px">
-    <input name="text" placeholder="Написать комментарий..." required style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--sans);font-size:.84rem;padding:8px 12px;border-radius:4px;outline:none">
-    <button type="submit" class="btn btn-green">💬</button></form>`;
+  h+='<form onsubmit="addComment(event,'+eid+')" style="margin-top:10px;display:flex;gap:8px">';
+  h+='<input name="text" placeholder="Написать комментарий..." required style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--sans);font-size:.85rem;padding:9px 12px;border-radius:4px;outline:none">';
+  h+='<button type="submit" class="btn btn-green">💬</button></form>';
   $('comments-sec').innerHTML=h;
 }
-async function addComment(e,eid){e.preventDefault();const fd=new FormData(e.target);const d=await(await fetch(`/api/events/${eid}/comments`,{method:'POST',body:fd})).json();if(d.success){toast('Комментарий добавлен');loadComments(eid)}else toast(d.detail||'Ошибка',1)}
-async function delComment(cid,eid){const d=await(await fetch(`/api/comments/${cid}`,{method:'DELETE'})).json();if(d.success)loadComments(eid);else toast(d.detail||'Ошибка',1)}
+async function addComment(e,eid){e.preventDefault();var fd=new FormData(e.target);var d=await(await fetch('/api/events/'+eid+'/comments',{method:'POST',body:fd})).json();if(d.success){toast('Комментарий добавлен');loadComments(eid)}else toast(d.detail||'Ошибка',1)}
+async function delComment(cid,eid){var d=await(await fetch('/api/comments/'+cid,{method:'DELETE'})).json();if(d.success)loadComments(eid)}
 
 // ═══ SPAWN REPORTS ═══
 async function loadSpawnReports(eid,canAdd){
-  const[rpts,wl]=await Promise.all([fetch(`/api/events/${eid}/spawn-reports`).then(r=>r.json()),fetch('/api/spawn-whitelist').then(r=>r.json())]);
-  let h='';
-  if(rpts.length){rpts.forEach(r=>{
-    const cd=U&&(U.id===r.user_id||U.can_edit_all||U.role==='head_admin'||U.role==='admin');
-    h+=`<div class="sr-row"><span style="color:var(--white);font-weight:500">${esc(r.item_name)}</span><span style="font-family:var(--mono);font-size:.8rem;color:var(--g1)">×${r.quantity}</span>
-    <span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">👤 ${esc(r.user_name)}</span>
-    ${r.note?`<span style="font-size:.75rem;color:var(--muted);font-style:italic">${esc(r.note)}</span>`:''}
-    ${cd?`<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3);margin-left:auto" onclick="delSR(${r.id},${eid})">✕</button>`:''}</div>`;
-  })}else h+=`<p style="color:var(--muted);font-size:.82rem">Отчётов нет</p>`;
+  var rpts=await(await fetch('/api/events/'+eid+'/spawn-reports')).json();
+  var wl=await(await fetch('/api/spawn-whitelist')).json();
+  var h='';
+  if(rpts.length){rpts.forEach(function(r){
+    var cd=U&&(U.id===r.user_id||U.can_edit_all||U.role==='head_admin'||U.role==='admin');
+    h+='<div class="sr-row"><span style="color:var(--white);font-weight:500">'+esc(r.item_name)+'</span><span style="font-family:var(--mono);font-size:.82rem;color:var(--g1)">×'+r.quantity+'</span>';
+    h+='<span style="font-family:var(--mono);font-size:.6rem;color:var(--muted)">👤 '+esc(r.user_name)+'</span>';
+    if(r.note)h+='<span style="font-size:.78rem;color:var(--muted);font-style:italic">'+esc(r.note)+'</span>';
+    if(cd)h+='<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3);margin-left:auto" onclick="delSR('+r.id+','+eid+')">✕</button>';
+    h+='</div>';
+  })}else{h+='<p style="color:var(--muted);font-size:.85rem">Отчётов нет</p>'}
   if(canAdd){
-    let opts='';wl.forEach(w=>{opts+=`<option value="${esc(w.item_name)}">${esc(w.item_name)}${w.category?' ('+esc(w.category)+')':''}</option>`});
-    h+=`<form onsubmit="addSR(event,${eid})" style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:end">
-      <div class="fg" style="margin:0;flex:2;min-width:140px"><label>Предмет</label><select name="item_name" required style="padding:7px"><option value="">Выберите...</option>${opts}<option value="__c">Другой...</option></select></div>
-      <div class="fg" style="margin:0;width:65px"><label>Кол-во</label><input type="number" name="quantity" value="1" min="1" style="padding:7px"></div>
-      <div class="fg" style="margin:0;flex:1;min-width:90px"><label>Заметка</label><input name="note" style="padding:7px"></div>
-      <button type="submit" class="btn btn-green" style="height:fit-content">➕</button></form>`;
+    var opts='';wl.forEach(function(w){opts+='<option value="'+esc(w.item_name)+'">'+esc(w.item_name)+(w.category?' ('+esc(w.category)+')':'')+'</option>'});
+    h+='<form onsubmit="addSR(event,'+eid+')" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:end">';
+    h+='<div class="fg" style="margin:0;flex:2;min-width:150px"><label>Предмет</label><select name="item_name" required style="padding:8px 10px"><option value="">Выберите...</option>'+opts+'<option value="__custom">Другой...</option></select></div>';
+    h+='<div class="fg" style="margin:0;width:70px"><label>Кол-во</label><input type="number" name="quantity" value="1" min="1" style="padding:8px 10px"></div>';
+    h+='<div class="fg" style="margin:0;flex:1;min-width:100px"><label>Заметка</label><input name="note" placeholder="" style="padding:8px 10px"></div>';
+    h+='<button type="submit" class="btn btn-green" style="height:fit-content">➕</button></form>';
   }
   $('spawn-rpt').innerHTML=h;
-  const sel=$('spawn-rpt')?.querySelector('select[name="item_name"]');
-  if(sel)sel.onchange=function(){if(this.value==='__c'){const i=document.createElement('input');i.name='item_name';i.required=true;i.style.cssText='width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);font-size:.84rem;padding:7px;border-radius:4px;outline:none';this.replaceWith(i);i.focus()}};
+  var sel=$('spawn-rpt').querySelector('select[name="item_name"]');
+  if(sel)sel.addEventListener('change',function(){
+    if(this.value==='__custom'){var inp=document.createElement('input');inp.name='item_name';inp.placeholder='Название предмета';inp.required=true;inp.style.cssText='width:100%;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--sans);font-size:.88rem;padding:8px 10px;border-radius:4px;outline:none';this.replaceWith(inp);inp.focus()}
+  });
 }
-async function addSR(e,eid){e.preventDefault();const d=await(await fetch(`/api/events/${eid}/spawn-reports`,{method:'POST',body:new FormData(e.target)})).json();if(d.success){toast('Записано');loadSpawnReports(eid,true)}else toast(d.detail||'Ошибка',1)}
-async function delSR(rid,eid){const d=await(await fetch(`/api/spawn-reports/${rid}`,{method:'DELETE'})).json();if(d.success)loadSpawnReports(eid,true)}
-
-// ═══ CALENDAR ═══
-let calMonth,calYear;
-async function loadCalendar(){
-  const now=new Date();calMonth=calMonth??now.getMonth();calYear=calYear??now.getFullYear();
-  const evs=await(await fetch('/api/events/calendar')).json();
-  const mn=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-  let h=`<div class="page-title">📅 Календарь ивентов</div>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-      <button class="btn btn-outline" onclick="calMonth--;if(calMonth<0){calMonth=11;calYear--}loadCalendar()">◀</button>
-      <span style="font-family:var(--head);font-size:1rem;color:var(--white);min-width:160px;text-align:center">${mn[calMonth]} ${calYear}</span>
-      <button class="btn btn-outline" onclick="calMonth++;if(calMonth>11){calMonth=0;calYear++}loadCalendar()">▶</button>
-      <button class="btn btn-outline" onclick="calMonth=${now.getMonth()};calYear=${now.getFullYear()};loadCalendar()">Сегодня</button>
-    </div>
-    <div class="cal-grid">`;
-  ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].forEach(d=>{h+=`<div class="cal-head">${d}</div>`});
-  const first=new Date(calYear,calMonth,1);const last=new Date(calYear,calMonth+1,0);
-  let startDay=(first.getDay()+6)%7;
-  const today=now.toISOString().slice(0,10);
-  // Fill prev month
-  for(let i=startDay-1;i>=0;i--){const d=new Date(calYear,calMonth,-i);h+=`<div class="cal-day other"><div class="day-num">${d.getDate()}</div></div>`}
-  // Current month
-  for(let d=1;d<=last.getDate();d++){
-    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday=ds===today;
-    const dayEvs=evs.filter(e=>e.event_date===ds);
-    h+=`<div class="cal-day${isToday?' today':''}"><div class="day-num">${d}</div>`;
-    dayEvs.forEach(e=>{const si=ST[e.status]||{color:'#888'};h+=`<div class="cal-ev" style="background:${si.color}30;color:${si.color}" onclick="event.stopPropagation();viewEvent(${e.id})">${e.event_time?e.event_time+' ':' '}${esc(e.title)}</div>`});
-    h+=`</div>`;
-  }
-  // Fill next month
-  const totalCells=startDay+last.getDate();const rem=totalCells%7===0?0:7-totalCells%7;
-  for(let i=1;i<=rem;i++)h+=`<div class="cal-day other"><div class="day-num">${i}</div></div>`;
-  h+=`</div>`;
-  $('app').innerHTML=h;
-}
-
-// ═══ EVENT FORM ═══
-function showEventForm(ev){
-  const isE=!!ev;
-  $('app').innerHTML=`<button class="btn-back" onclick="SP('events')">← Назад</button>
-    <div class="page-title">${isE?'Редактирование':'Новый ивент'}</div>
-    <form id="ef" onsubmit="saveEv(event,${isE?ev.id:0})">
-      <div class="fr"><div class="fg"><label>Название</label><input name="title" value="${isE?esc(ev.title):''}" required></div>
-      <div class="fg"><label>Тип</label><input name="event_type" value="${isE?esc(ev.event_type):''}" placeholder="Сюжетный / Поисковый" required></div></div>
-      <div class="fr3"><div class="fg"><label>Продолжительность</label><input name="duration" value="${isE?esc(ev.duration):''}" required></div>
-      <div class="fg"><label>Дата проведения</label><input type="date" name="event_date" value="${isE&&ev.event_date?ev.event_date:''}"></div>
-      <div class="fg"><label>Время</label><input type="time" name="event_time" value="${isE&&ev.event_time?ev.event_time:''}"></div></div>
-      <div class="fr"><div class="fg"><label>Локация</label><input name="location" value="${isE?esc(ev.location):''}" required></div>
-      <div class="fg"><label>Организатор</label><input name="organizer_name" value="${isE?esc(ev.organizer_name):(U?U.display_name:'')}" required></div></div>
-      <div class="fg"><label>Краткое описание</label><textarea name="short_desc" rows="3" required>${isE?esc(ev.short_desc):''}</textarea></div>
-      <div class="fg"><label>Полное описание (HTML)</label><textarea name="full_desc" rows="8" required>${isE?escTA(ev.full_desc):''}</textarea></div>
-      <div class="fr"><div class="fg"><label>Правила</label><textarea name="rules_text" rows="3">${isE?esc(ev.rules_text||''):''}</textarea></div>
-      <div class="fg"><label>Награды</label><textarea name="rewards_text" rows="3">${isE?esc(ev.rewards_text||''):''}</textarea></div></div>
-      ${!isE?`<div class="fg"><label>Статус при создании</label><select name="status"><option value="pending">⏳ На проверке</option><option value="draft">📝 Черновик</option></select></div>`:''}
-      <div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">${isE?'💾 Сохранить':'➕ Создать'}</button><button type="button" class="btn btn-outline" onclick="SP('events')">Отмена</button></div></form>`;
-}
-async function editEvent(id){showEventForm(await(await fetch('/api/events/'+id)).json());document.querySelectorAll('.topbar-nav button').forEach(b=>b.classList.remove('active'))}
-async function saveEv(e,eid){e.preventDefault();const fd=new FormData($('ef'));const d=await(await fetch(eid?'/api/events/'+eid:'/api/events',{method:eid?'PUT':'POST',body:fd})).json();if(d.success){toast(eid?'Сохранено!':'Создан!');SP('events')}else toast(d.detail||'Ошибка',1)}
-async function deleteEvent(id){if(!confirm('Удалить?'))return;const d=await(await fetch('/api/events/'+id,{method:'DELETE'})).json();if(d.success){toast('Удалён');SP('events')}else toast(d.detail||'Ошибка',1)}
+async function addSR(e,eid){e.preventDefault();var d=await(await fetch('/api/events/'+eid+'/spawn-reports',{method:'POST',body:new FormData(e.target)})).json();if(d.success){toast('Записано');loadSpawnReports(eid,true)}else toast(d.detail||'Ошибка',1)}
+async function delSR(rid,eid){var d=await(await fetch('/api/spawn-reports/'+rid,{method:'DELETE'})).json();if(d.success)loadSpawnReports(eid,true)}
 
 // ═══ SPAWN WHITELIST ═══
 async function loadSpawnList(){
-  const wl=await(await fetch('/api/spawn-whitelist')).json();
-  const isAdm=U&&(U.role==='head_admin'||U.role==='admin');
-  let h=`<div class="page-title">📦 Спавн-лист <span class="cnt">(${wl.length})</span></div>`;
-  if(isAdm)h+=`<div id="swf" style="margin-bottom:14px"><button class="btn btn-green" onclick="showAddSW()">➕ Добавить</button></div>`;
-  if(!wl.length)h+=`<div class="empty"><div class="big">📦</div><p>Список пуст</p></div>`;
-  else{let cats={};wl.forEach(w=>{const c=w.category||'Без категории';if(!cats[c])cats[c]=[];cats[c].push(w)});
-  for(const[c,items]of Object.entries(cats)){h+=`<div style="font-family:var(--mono);font-size:.6rem;color:var(--g1);letter-spacing:.1em;margin:14px 0 6px;text-transform:uppercase">${esc(c)}</div>`;
-  items.forEach(w=>{h+=`<div class="spawn-item"><span style="color:var(--white)">${esc(w.item_name)}</span>${isAdm?`<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="delSW(${w.id})">✕</button>`:''}</div>`})}}
+  var wl=await(await fetch('/api/spawn-whitelist')).json();
+  var isAdm=U&&(U.role==='head_admin'||U.role==='admin');
+  var h='<div class="page-title">📦 Спавн-лист <span class="cnt">('+wl.length+')</span></div>';
+  if(isAdm)h+='<div id="swf" style="margin-bottom:16px"><button class="btn btn-green" onclick="showAddSW()">➕ Добавить предмет</button></div>';
+  if(!wl.length){h+='<div class="empty"><div class="big">📦</div><p>Список пуст</p></div>'}
+  else{var cats={};wl.forEach(function(w){var c=w.category||'Без категории';if(!cats[c])cats[c]=[];cats[c].push(w)});
+  Object.keys(cats).forEach(function(c){
+    h+='<div style="font-family:var(--mono);font-size:.65rem;color:var(--g1);letter-spacing:.1em;margin:16px 0 8px;text-transform:uppercase">'+esc(c)+'</div>';
+    cats[c].forEach(function(w){h+='<div class="spawn-item"><span style="color:var(--white)">'+esc(w.item_name)+'</span>'+(isAdm?'<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="delSW('+w.id+')">✕</button>':'')+'</div>'});
+  })}
   $('app').innerHTML=h;
 }
-function showAddSW(){$('swf').innerHTML=`<form onsubmit="addSW(event)" class="ucard" style="border-color:var(--g2)"><div class="fr"><div class="fg"><label>Предмет</label><input name="item_name" required></div><div class="fg"><label>Категория</label><input name="category"></div></div><div style="display:flex;gap:6px"><button type="submit" class="btn btn-green">Добавить</button><button type="button" class="btn btn-outline" onclick="loadSpawnList()">Отмена</button></div></form>`}
-async function addSW(e){e.preventDefault();const d=await(await fetch('/api/spawn-whitelist',{method:'POST',body:new FormData(e.target)})).json();if(d.success){toast('Добавлено');loadSpawnList()}else toast(d.detail||'Ошибка',1)}
-async function delSW(id){if(!confirm('Удалить?'))return;const d=await(await fetch('/api/spawn-whitelist/'+id,{method:'DELETE'})).json();if(d.success){toast('Удалено');loadSpawnList()}}
+function showAddSW(){$('swf').innerHTML='<form onsubmit="addSW(event)" class="ucard" style="border-color:var(--g2)"><div class="fr"><div class="fg"><label>Название предмета</label><input name="item_name" required></div><div class="fg"><label>Категория</label><input name="category" placeholder="Оружие, Медицина..."></div></div><div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">Добавить</button><button type="button" class="btn btn-outline" onclick="loadSpawnList()">Отмена</button></div></form>'}
+async function addSW(e){e.preventDefault();var d=await(await fetch('/api/spawn-whitelist',{method:'POST',body:new FormData(e.target)})).json();if(d.success){toast('Добавлено');loadSpawnList()}else toast(d.detail||'Ошибка',1)}
+async function delSW(id){if(!confirm('Удалить?'))return;var d=await(await fetch('/api/spawn-whitelist/'+id,{method:'DELETE'})).json();if(d.success){toast('Удалено');loadSpawnList()}}
 
 // ═══ USERS ═══
 async function loadUsers(){
-  const r=await fetch('/api/users');if(r.status===403){toast('Нет прав',1);SP('dash');return}
-  const users=await r.json();
-  let h=`<div class="page-title">Юзеры <span class="cnt">(${users.length})</span></div>
-    <div style="margin-bottom:14px"><button class="btn btn-green" onclick="showAddUser()">➕</button></div><div id="auf"></div>`;
-  users.forEach((u,i)=>{
-    const isSelf=u.id===U.id;
-    h+=`<div class="ucard"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-family:var(--mono);font-size:.7rem;color:var(--g1)">#${i+1}</span><span style="color:var(--white);font-weight:500">${esc(u.display_name)}</span><span style="font-family:var(--mono);font-size:.68rem;color:var(--muted)">@${esc(u.username)}</span>${roleBadge(u.role)}</div>`;
+  var r=await fetch('/api/users');if(r.status===403){toast('Нет прав',1);SP('events');return}
+  var users=await r.json();
+  var h='<div class="page-title">Пользователи <span class="cnt">('+users.length+')</span></div>';
+  h+='<div style="margin-bottom:16px"><button class="btn btn-green" onclick="showAddUser()">➕ Добавить</button></div><div id="auf"></div>';
+  users.forEach(function(u,i){
+    var isSelf=u.id===U.id;
+    h+='<div class="ucard"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-family:var(--mono);font-size:.72rem;color:var(--g1)">#'+(i+1)+'</span><span style="color:var(--white);font-weight:500;font-size:.92rem">'+esc(u.display_name)+'</span><span style="font-family:var(--mono);font-size:.72rem;color:var(--muted)">@'+esc(u.username)+'</span>'+roleBadge(u.role)+'</div>';
     if(!isSelf){
-      h+=`<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px">
-        <select class="tsel" onchange="chRole(${u.id},this.value)">`;
-      ROLES.forEach(r=>{h+=`<option value="${r.role_key}"${u.role===r.role_key?' selected':''}>${esc(r.display_name)}</option>`});
-      h+=`</select>
-        <button class="tbtn" style="color:var(--amber);border-color:rgba(245,158,11,.3)" onclick="showPerms(${u.id},${u.can_approve===null?'null':u.can_approve},${u.can_edit_all===null?'null':u.can_edit_all},${u.can_manage_users===null?'null':u.can_manage_users})">⚙</button>
-        <button class="tbtn" style="color:var(--purple);border-color:rgba(167,139,250,.3)" onclick="showPw(${u.id})">🔑</button>
-        <button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="delUser(${u.id})">🗑</button></div>`;
-    } else h+=`<div style="font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:4px">Это вы</div>`;
-    h+=`<div id="p-${u.id}"></div><div id="pw-${u.id}"></div></div>`;
-  });$('app').innerHTML=h;
+      h+='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><select class="tsel" onchange="chRole('+u.id+',this.value)">';
+      ROLES.forEach(function(r){h+='<option value="'+r.role_key+'"'+(u.role===r.role_key?' selected':'')+'>'+esc(r.display_name)+'</option>'});
+      h+='</select>';
+      h+='<button class="tbtn" style="color:var(--amber);border-color:rgba(245,158,11,.3)" onclick="showPerms('+u.id+','+(u.can_approve===null?'null':u.can_approve)+','+(u.can_edit_all===null?'null':u.can_edit_all)+','+(u.can_manage_users===null?'null':u.can_manage_users)+')">⚙ Права</button>';
+      h+='<button class="tbtn" style="color:var(--purple);border-color:rgba(167,139,250,.3)" onclick="showPw('+u.id+')">🔑</button>';
+      h+='<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="delUser('+u.id+')">🗑</button></div>';
+    }else{h+='<div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:4px">Это вы</div>'}
+    h+='<div id="p-'+u.id+'"></div><div id="pw-'+u.id+'"></div></div>';
+  });
+  $('app').innerHTML=h;
 }
-function showAddUser(){let o='';ROLES.forEach(r=>{o+=`<option value="${r.role_key}">${esc(r.display_name)}</option>`});
-  $('auf').innerHTML=`<div class="ucard" style="border-color:var(--g2)"><form onsubmit="addUser(event)"><div class="fr"><div class="fg"><label>Логин</label><input name="username" required></div><div class="fg"><label>Пароль</label><input type="password" name="password" required></div></div><div class="fr"><div class="fg"><label>Имя</label><input name="display_name" required></div><div class="fg"><label>Роль</label><select name="role">${o}</select></div></div><div style="display:flex;gap:6px"><button type="submit" class="btn btn-green">Добавить</button><button type="button" class="btn btn-outline" onclick="$('auf').innerHTML=''">Отмена</button></div></form></div>`}
-async function addUser(e){e.preventDefault();const d=await(await fetch('/api/users',{method:'POST',body:new FormData(e.target)})).json();if(d.success){toast('Добавлен!');loadUsers()}else toast(d.detail||'Ошибка',1)}
-async function delUser(id){if(!confirm('Удалить?'))return;const d=await(await fetch('/api/users/'+id,{method:'DELETE'})).json();if(d.success){toast('Удалён');loadUsers()}else toast(d.detail||'Ошибка',1)}
-async function chRole(uid,role){const fd=new FormData();fd.append('role',role);const d=await(await fetch(`/api/users/${uid}/role`,{method:'PUT',body:fd})).json();if(d.success)toast('Роль изменена!');else toast(d.detail||'Ошибка',1)}
+function showAddUser(){var o='';ROLES.forEach(function(r){o+='<option value="'+r.role_key+'"'+(r.role_key==='junior_eventologist'?' selected':'')+'>'+esc(r.display_name)+'</option>'});
+$('auf').innerHTML='<div class="ucard" style="border-color:var(--g2)"><form onsubmit="addUser(event)"><div class="fr"><div class="fg"><label>Логин</label><input name="username" required></div><div class="fg"><label>Пароль</label><input type="password" name="password" required></div></div><div class="fr"><div class="fg"><label>Имя</label><input name="display_name" required></div><div class="fg"><label>Роль</label><select name="role">'+o+'</select></div></div><div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">Добавить</button><button type="button" class="btn btn-outline" onclick="$(\'auf\').innerHTML=\'\'">Отмена</button></div></form></div>'}
+async function addUser(e){e.preventDefault();var d=await(await fetch('/api/users',{method:'POST',body:new FormData(e.target)})).json();if(d.success){toast('Добавлен!');loadUsers()}else toast(d.detail||'Ошибка',1)}
+async function delUser(id){if(!confirm('Удалить?'))return;var d=await(await fetch('/api/users/'+id,{method:'DELETE'})).json();if(d.success){toast('Удалён');loadUsers()}else toast(d.detail||'Ошибка',1)}
+async function chRole(uid,role){var fd=new FormData();fd.append('role',role);var d=await(await fetch('/api/users/'+uid+'/role',{method:'PUT',body:fd})).json();if(d.success)toast('Роль изменена!');else toast(d.detail||'Ошибка',1)}
 function showPerms(uid,ca,cea,cmu){
-  const sel=(n,v)=>`<select class="tsel" name="${n}"><option value="null"${v===null?' selected':''}>По роли</option><option value="1"${v===1?' selected':''}>✅</option><option value="0"${v===0?' selected':''}>❌</option></select>`;
-  $('p-'+uid).innerHTML=`<form onsubmit="savePerms(event,${uid})" style="margin-top:8px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:4px">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-      <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Одобрение:${sel('can_approve',ca)}</span>
-      <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Ред.всех:${sel('can_edit_all',cea)}</span>
-      <span style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">Юзеры:${sel('can_manage_users',cmu)}</span>
-      <button type="submit" class="btn btn-green" style="font-size:.55rem;padding:4px 8px">💾</button>
-      <button type="button" class="btn btn-outline" style="font-size:.55rem;padding:4px 8px" onclick="$('p-${uid}').innerHTML=''">✕</button>
-    </div></form>`;
+  var sel=function(n,v){return'<select class="tsel" name="'+n+'"><option value="null"'+(v===null?' selected':'')+'>По роли</option><option value="1"'+(v===1?' selected':'')+'>✅ Да</option><option value="0"'+(v===0?' selected':'')+'>❌ Нет</option></select>'};
+  $('p-'+uid).innerHTML='<form onsubmit="savePerms(event,'+uid+')" style="margin-top:10px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:4px"><div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Одобрение: '+sel('can_approve',ca)+'</span><span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Ред.всех: '+sel('can_edit_all',cea)+'</span><span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)">Юзеры: '+sel('can_manage_users',cmu)+'</span><button type="submit" class="btn btn-green" style="font-size:.58rem;padding:5px 10px">💾</button><button type="button" class="btn btn-outline" style="font-size:.58rem;padding:5px 10px" onclick="$(\'p-'+uid+'\').innerHTML=\'\'">✕</button></div></form>';
 }
-async function savePerms(e,uid){e.preventDefault();const d=await(await fetch(`/api/users/${uid}/perms`,{method:'PUT',body:new FormData(e.target)})).json();if(d.success){toast('Сохранено!');loadUsers()}else toast(d.detail||'Ошибка',1)}
-function showPw(uid){$('pw-'+uid).innerHTML=`<form onsubmit="chPw(event,${uid})" style="margin-top:6px;display:flex;gap:6px;align-items:end"><div class="fg" style="margin:0;flex:1"><label>Новый пароль</label><input type="password" name="password" required style="padding:6px;font-size:.8rem"></div><button type="submit" class="btn btn-green" style="font-size:.55rem;padding:5px 8px;height:fit-content">💾</button><button type="button" class="btn btn-outline" style="font-size:.55rem;padding:5px 8px;height:fit-content" onclick="$('pw-${uid}').innerHTML=''">✕</button></form>`}
-async function chPw(e,uid){e.preventDefault();const d=await(await fetch(`/api/users/${uid}/password`,{method:'PUT',body:new FormData(e.target)})).json();if(d.success){toast('Пароль изменён!');$('pw-'+uid).innerHTML=''}else toast(d.detail||'Ошибка',1)}
+async function savePerms(e,uid){e.preventDefault();var d=await(await fetch('/api/users/'+uid+'/perms',{method:'PUT',body:new FormData(e.target)})).json();if(d.success){toast('Сохранено!');loadUsers()}else toast(d.detail||'Ошибка',1)}
+function showPw(uid){$('pw-'+uid).innerHTML='<form onsubmit="chPw(event,'+uid+')" style="margin-top:8px;display:flex;gap:6px;align-items:end"><div class="fg" style="margin:0;flex:1"><label>Новый пароль</label><input type="password" name="password" required style="padding:6px 10px;font-size:.8rem"></div><button type="submit" class="btn btn-green" style="font-size:.58rem;padding:6px 10px;height:fit-content">Сменить</button><button type="button" class="btn btn-outline" style="font-size:.58rem;padding:6px 10px;height:fit-content" onclick="$(\'pw-'+uid+'\').innerHTML=\'\'">✕</button></form>'}
+async function chPw(e,uid){e.preventDefault();var d=await(await fetch('/api/users/'+uid+'/password',{method:'PUT',body:new FormData(e.target)})).json();if(d.success){toast('Пароль изменён!');$('pw-'+uid).innerHTML=''}else toast(d.detail||'Ошибка',1)}
 
 // ═══ ROLES ═══
 async function loadRoles(){
   ROLES=await(await fetch('/api/roles')).json();
-  let h=`<div class="page-title">⚙ Роли <span class="cnt">(${ROLES.length})</span></div>
-    <div style="margin-bottom:14px"><button class="btn btn-green" onclick="showAddRole()">➕ Новая роль</button></div><div id="arf"></div>`;
-  ROLES.forEach(r=>{const pp=n=>r[n]?'on':'off';
-    h+=`<div class="role-card"><div class="rc-dot" style="background:${r.color}"></div>
-    <div><div style="font-family:var(--head);font-size:.85rem;color:var(--white);text-transform:uppercase">${esc(r.display_name)}</div><div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">${esc(r.role_key)} · P${r.priority}${r.is_system?' · sys':''}</div></div>
-    <div style="display:flex;gap:4px;margin-left:auto;flex-wrap:wrap"><span class="rc-perm ${pp('can_approve')}">Одобр</span><span class="rc-perm ${pp('can_edit_all')}">Ред</span><span class="rc-perm ${pp('can_manage_users')}">Юзеры</span><span class="rc-perm ${pp('can_manage_roles')}">Роли</span></div>
-    <div style="display:flex;gap:3px"><button class="tbtn" style="color:var(--amber);border-color:rgba(245,158,11,.3)" onclick="showEditRole(${r.id})">✏</button>${!r.is_system?`<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="delRole(${r.id})">🗑</button>`:''}</div></div>`;
-  });$('app').innerHTML=h;
+  var h='<div class="page-title">⚙ Роли <span class="cnt">('+ROLES.length+')</span></div>';
+  h+='<div style="margin-bottom:16px"><button class="btn btn-green" onclick="showAddRole()">➕ Новая роль</button></div><div id="arf"></div>';
+  ROLES.forEach(function(r){
+    var pp=function(n){return r[n]?'on':'off'};
+    h+='<div class="role-card"><div class="rc-dot" style="background:'+r.color+'"></div>';
+    h+='<div><div style="font-family:var(--head);font-size:.9rem;color:var(--white);text-transform:uppercase">'+esc(r.display_name)+'</div><div style="font-family:var(--mono);font-size:.55rem;color:var(--muted)">'+esc(r.role_key)+' · P'+r.priority+(r.is_system?' · системная':'')+'</div></div>';
+    h+='<div style="display:flex;gap:5px;margin-left:auto;flex-wrap:wrap"><span class="rc-perm '+pp('can_approve')+'">Одобрение</span><span class="rc-perm '+pp('can_edit_all')+'">Ред.всех</span><span class="rc-perm '+pp('can_manage_users')+'">Юзеры</span><span class="rc-perm '+pp('can_manage_roles')+'">Роли</span></div>';
+    h+='<div style="display:flex;gap:4px"><button class="tbtn" style="color:var(--amber);border-color:rgba(245,158,11,.3)" onclick="showEditRole('+r.id+')">✏</button>';
+    if(!r.is_system)h+='<button class="tbtn" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="delRole('+r.id+')">🗑</button>';
+    h+='</div></div>';
+  });
+  $('app').innerHTML=h;
 }
-function roleForm(r){const isE=!!r;return`<div class="ucard" style="border-color:var(--g2)"><form onsubmit="${isE?`updRole(event,${r.id})`:'addRole(event)'}">
-<div class="fr"><div class="fg"><label>Ключ</label><input name="role_key" value="${isE?esc(r.role_key):''}" ${isE?'readonly':''} required></div><div class="fg"><label>Название</label><input name="display_name" value="${isE?esc(r.display_name):''}" required></div></div>
-<div class="fr"><div class="fg"><label>Цвет</label><input name="color" type="color" value="${isE?r.color:'#4ade80'}"></div><div class="fg"><label>Приоритет</label><input name="priority" type="number" value="${isE?r.priority:10}" min="1" max="100"></div></div>
-<div style="display:flex;gap:14px;flex-wrap:wrap;margin:10px 0">
-${['can_approve:Одобрение','can_edit_all:Ред.всех','can_manage_users:Юзеры','can_manage_roles:Роли'].map(x=>{const[k,l]=x.split(':');return`<label style="display:flex;gap:5px;font-family:var(--mono);font-size:.6rem;color:var(--text);cursor:pointer"><input type="checkbox" name="${k}" value="1" ${isE&&r[k]?'checked':''}>${l}</label>`}).join('')}
-</div><div style="display:flex;gap:6px"><button type="submit" class="btn btn-green">${isE?'💾':'➕'}</button><button type="button" class="btn btn-outline" onclick="loadRoles()">Отмена</button></div></form></div>`}
-function showAddRole(){$('arf').innerHTML=roleForm()}
-function showEditRole(id){const r=ROLES.find(x=>x.id===id);if(!r)return;let el=$('erf-'+id);if(!el){el=document.createElement('div');el.id='erf-'+id;document.querySelectorAll('.role-card').forEach(c=>{if(c.textContent.includes(r.display_name))c.after(el)})}el.innerHTML=roleForm(r)}
-function bRFD(f){const fd=new FormData();['role_key','display_name','color','priority'].forEach(k=>fd.append(k,f[k].value));['can_approve','can_edit_all','can_manage_users','can_manage_roles'].forEach(k=>fd.append(k,f[k]&&f[k].checked?1:0));return fd}
-async function addRole(e){e.preventDefault();const d=await(await fetch('/api/roles',{method:'POST',body:bRFD(e.target)})).json();if(d.success){toast('Создана!');loadRoles()}else toast(d.detail||'Ошибка',1)}
-async function updRole(e,id){e.preventDefault();const d=await(await fetch('/api/roles/'+id,{method:'PUT',body:bRFD(e.target)})).json();if(d.success){toast('Обновлена!');loadRoles()}else toast(d.detail||'Ошибка',1)}
-async function delRole(id){if(!confirm('Удалить?'))return;const d=await(await fetch('/api/roles/'+id,{method:'DELETE'})).json();if(d.success){toast('Удалена');loadRoles()}else toast(d.detail||'Ошибка',1)}
+function roleForm(r){
+  var isE=!!r;
+  var h='<div class="ucard" style="border-color:var(--g2)"><form onsubmit="'+(isE?'updRole(event,'+r.id+')':'addRole(event)')+'">';
+  h+='<div class="fr"><div class="fg"><label>Ключ (англ.)</label><input name="role_key" value="'+(isE?esc(r.role_key):'')+'" '+(isE?'readonly':'')+' required></div>';
+  h+='<div class="fg"><label>Название</label><input name="display_name" value="'+(isE?esc(r.display_name):'')+'" required></div></div>';
+  h+='<div class="fr"><div class="fg"><label>Цвет</label><input name="color" type="color" value="'+(isE?r.color:'#4ade80')+'"></div>';
+  h+='<div class="fg"><label>Приоритет</label><input name="priority" type="number" value="'+(isE?r.priority:10)+'" min="1" max="100"></div></div>';
+  h+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin:12px 0">';
+  var perms=[['can_approve','Одобрение'],['can_edit_all','Ред. всех'],['can_manage_users','Юзеры'],['can_manage_roles','Роли']];
+  perms.forEach(function(p){h+='<label style="display:flex;gap:6px;font-family:var(--mono);font-size:.65rem;color:var(--text);cursor:pointer"><input type="checkbox" name="'+p[0]+'" value="1" '+(isE&&r[p[0]]?'checked':'')+'>'+p[1]+'</label>'});
+  h+='</div><div style="display:flex;gap:8px"><button type="submit" class="btn btn-green">'+(isE?'Сохранить':'Создать')+'</button><button type="button" class="btn btn-outline" onclick="loadRoles()">Отмена</button></div></form></div>';
+  return h;
+}
+function showAddRole(){$('arf').innerHTML=roleForm(null)}
+function showEditRole(id){var r=ROLES.find(function(x){return x.id===id});if(!r)return;var el=document.getElementById('erf-'+id);if(!el){el=document.createElement('div');el.id='erf-'+id;var cards=document.querySelectorAll('.role-card');cards.forEach(function(c){if(c.textContent.indexOf(r.display_name)!==-1)c.after(el)})}el.innerHTML=roleForm(r)}
+function bRFD(f){var fd=new FormData();['role_key','display_name','color','priority'].forEach(function(k){fd.append(k,f[k].value)});['can_approve','can_edit_all','can_manage_users','can_manage_roles'].forEach(function(k){fd.append(k,f[k]&&f[k].checked?1:0)});return fd}
+async function addRole(e){e.preventDefault();var d=await(await fetch('/api/roles',{method:'POST',body:bRFD(e.target)})).json();if(d.success){toast('Роль создана!');loadRoles()}else toast(d.detail||'Ошибка',1)}
+async function updRole(e,id){e.preventDefault();var d=await(await fetch('/api/roles/'+id,{method:'PUT',body:bRFD(e.target)})).json();if(d.success){toast('Обновлена!');loadRoles()}else toast(d.detail||'Ошибка',1)}
+async function delRole(id){if(!confirm('Удалить роль?'))return;var d=await(await fetch('/api/roles/'+id,{method:'DELETE'})).json();if(d.success){toast('Удалена');loadRoles()}else toast(d.detail||'Ошибка',1)}
 
 init();
 </script>
