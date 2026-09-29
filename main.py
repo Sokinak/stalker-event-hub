@@ -32,7 +32,8 @@ def init_db():
         duration TEXT NOT NULL, location TEXT NOT NULL, organizer_name TEXT NOT NULL,
         author_id INTEGER NOT NULL, short_desc TEXT NOT NULL, full_desc TEXT NOT NULL,
         rules_text TEXT, rewards_text TEXT, status TEXT DEFAULT 'pending',
-        reviewed_by TEXT DEFAULT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        reviewed_by TEXT DEFAULT NULL, event_date TEXT DEFAULT NULL, event_time TEXT DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (author_id) REFERENCES users (id))''')
     c.execute('''CREATE TABLE IF NOT EXISTS spawn_whitelist (
         id INTEGER PRIMARY KEY AUTOINCREMENT, item_name TEXT UNIQUE NOT NULL, category TEXT DEFAULT '',
@@ -55,6 +56,9 @@ def init_db():
         except: pass
     for col in ("can_manage_roles","is_system"):
         try: c.execute(f"ALTER TABLE roles ADD COLUMN {col} INTEGER DEFAULT 0")
+        except: pass
+    for col in ("event_date","event_time"):
+        try: c.execute(f"ALTER TABLE events ADD COLUMN {col} TEXT DEFAULT NULL")
         except: pass
     # Seed roles
     c.execute("SELECT COUNT(*) FROM roles")
@@ -137,6 +141,62 @@ async def me(req:Request):
     return {"authenticated":True,"id":u["id"],"username":u["username"],"display_name":u["display_name"],
             "role":u["role"],"role_display":rd["display_name"] if rd else u["role"],"role_color":rd["color"] if rd else "#4ade80",**p}
 
+STATUSES = [
+    {"key":"draft","label":"Черновик","icon":"📝","color":"#6b7280"},
+    {"key":"pending","label":"На проверке","icon":"⏳","color":"#eab308"},
+    {"key":"approved","label":"Одобрен","icon":"✅","color":"#22c55e"},
+    {"key":"scheduled","label":"Запланирован","icon":"📅","color":"#3b82f6"},
+    {"key":"active","label":"Проводится","icon":"🔥","color":"#f97316"},
+    {"key":"completed","label":"Завершён","icon":"🏁","color":"#8b5cf6"},
+    {"key":"archived","label":"Архив","icon":"📦","color":"#6b7280"},
+]
+STATUS_MAP = {s["key"]:s for s in STATUSES}
+
+@app.get("/api/statuses")
+async def get_statuses():
+    return STATUSES
+
+@app.get("/api/stats")
+async def get_stats():
+    conn = get_db()
+    total = conn.execute("SELECT COUNT(*) FROM events").fetchone()[0]
+    by_status = []
+    for s in STATUSES:
+        cnt = conn.execute("SELECT COUNT(*) FROM events WHERE status=?", (s["key"],)).fetchone()[0]
+        by_status.append({"key":s["key"],"label":s["label"],"icon":s["icon"],"color":s["color"],"count":cnt})
+    top_authors = [{"name":r[0],"count":r[1]} for r in conn.execute("SELECT users.display_name, COUNT(*) as cnt FROM events JOIN users ON events.author_id=users.id GROUP BY author_id ORDER BY cnt DESC LIMIT 5").fetchall()]
+    top_spawn = [{"item":r[0],"total":r[1]} for r in conn.execute("SELECT item_name, SUM(quantity) as total FROM spawn_reports GROUP BY item_name ORDER BY total DESC LIMIT 5").fetchall()]
+    total_users = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    total_comments = conn.execute("SELECT COUNT(*) FROM comments").fetchone()[0]
+    total_spawned = conn.execute("SELECT COALESCE(SUM(quantity),0) FROM spawn_reports").fetchone()[0]
+    conn.close()
+    return {"total_events":total,"by_status":by_status,"total_users":total_users,"total_comments":total_comments,"total_spawned":total_spawned,"top_authors":top_authors,"top_spawn":top_spawn}
+
+@app.get("/api/events/calendar")
+async def calendar_events():
+    conn = get_db()
+    rows = conn.execute("SELECT id,title,event_type,event_date,event_time,status,location FROM events WHERE event_date IS NOT NULL AND event_date != '' ORDER BY event_date ASC").fetchall()
+    conn.close(); return [dict(r) for r in rows]
+
+@app.put("/api/events/{eid}/status")
+async def change_status(eid:int, req:Request, status:str=Form(...)):
+    u = get_current_user(req)
+    if not u: raise HTTPException(401)
+    if status not in STATUS_MAP: raise HTTPException(400, detail="Неизвестный статус")
+    p = get_perms(u); conn = get_db()
+    ev = conn.execute("SELECT * FROM events WHERE id=?", (eid,)).fetchone()
+    if not ev: conn.close(); raise HTTPException(404)
+    need_perm = status in ("approved","scheduled","active","completed","archived")
+    if need_perm and not p["can_approve"] and u["role"] not in ("head_admin","admin"):
+        conn.close(); raise HTTPException(403, detail="Нет прав")
+    rb = u["display_name"] if need_perm else ev["reviewed_by"]
+    conn.execute("UPDATE events SET status=?, reviewed_by=? WHERE id=?", (status, rb, eid))
+    conn.commit(); conn.close()
+    if ev["author_id"] != u["id"]:
+        sl = STATUS_MAP.get(status,{})
+        notify(ev["author_id"],"status_change",sl.get("icon","")+" Ивент «"+ev["title"]+"» — "+sl.get("label",status)+" ("+u["display_name"]+")",eid)
+    return {"success":True}
+
 # ═══ ROLES ═══
 @app.get("/api/roles")
 async def list_roles():
@@ -203,29 +263,30 @@ async def get_event(eid:int):
     return dict(row)
 
 @app.post("/api/events")
-async def create_event(req:Request, title:str=Form(...), event_type:str=Form(...), duration:str=Form(...), location:str=Form(...), organizer_name:str=Form(...), short_desc:str=Form(...), full_desc:str=Form(...), rules_text:str=Form(""), rewards_text:str=Form("")):
+async def create_event(req:Request, title:str=Form(...), event_type:str=Form(...), duration:str=Form(...), location:str=Form(...), organizer_name:str=Form(...), short_desc:str=Form(...), full_desc:str=Form(...), rules_text:str=Form(""), rewards_text:str=Form(""), event_date:str=Form(""), event_time:str=Form("")):
     u = get_current_user(req)
     if not u: raise HTTPException(401)
     conn = get_db()
-    c = conn.execute("INSERT INTO events (title,event_type,duration,location,organizer_name,author_id,short_desc,full_desc,rules_text,rewards_text) VALUES (?,?,?,?,?,?,?,?,?,?)",
-        (title,event_type,duration,location,organizer_name,u["id"],short_desc,full_desc,rules_text,rewards_text))
+    c = conn.execute("INSERT INTO events (title,event_type,duration,location,organizer_name,author_id,short_desc,full_desc,rules_text,rewards_text,event_date,event_time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        (title,event_type,duration,location,organizer_name,u["id"],short_desc,full_desc,rules_text,rewards_text,event_date or None,event_time or None))
     conn.commit(); eid=c.lastrowid; conn.close(); return {"success":True,"event_id":eid}
 
 @app.put("/api/events/{eid}")
-async def update_event(eid:int, req:Request, title:str=Form(...), event_type:str=Form(...), duration:str=Form(...), location:str=Form(...), organizer_name:str=Form(...), short_desc:str=Form(...), full_desc:str=Form(...), rules_text:str=Form(""), rewards_text:str=Form("")):
+async def update_event(eid:int, req:Request, title:str=Form(...), event_type:str=Form(...), duration:str=Form(...), location:str=Form(...), organizer_name:str=Form(...), short_desc:str=Form(...), full_desc:str=Form(...), rules_text:str=Form(""), rewards_text:str=Form(""), event_date:str=Form(""), event_time:str=Form("")):
     u = get_current_user(req)
     if not u: raise HTTPException(401)
     p = get_perms(u); conn = get_db()
     ev = conn.execute("SELECT * FROM events WHERE id=?", (eid,)).fetchone()
     if not ev: conn.close(); raise HTTPException(404)
     isTop = u["role"] in ("head_admin","admin")
-    if ev["status"] == "approved" and not isTop:
-        conn.close(); raise HTTPException(403, detail="Одобренные ивенты редактирует только Гл. Ивентолог")
+    locked = ev["status"] in ("approved","scheduled","active","completed")
+    if locked and not isTop:
+        conn.close(); raise HTTPException(403, detail="Этот ивент заблокирован для редактирования")
     if not p["can_edit_all"] and ev["author_id"] != u["id"]: conn.close(); raise HTTPException(403)
     ns = ev["status"] if isTop else "pending"
     nr = ev["reviewed_by"] if isTop else None
-    conn.execute("UPDATE events SET title=?,event_type=?,duration=?,location=?,organizer_name=?,short_desc=?,full_desc=?,rules_text=?,rewards_text=?,status=?,reviewed_by=? WHERE id=?",
-        (title,event_type,duration,location,organizer_name,short_desc,full_desc,rules_text,rewards_text,ns,nr,eid))
+    conn.execute("UPDATE events SET title=?,event_type=?,duration=?,location=?,organizer_name=?,short_desc=?,full_desc=?,rules_text=?,rewards_text=?,status=?,reviewed_by=?,event_date=?,event_time=? WHERE id=?",
+        (title,event_type,duration,location,organizer_name,short_desc,full_desc,rules_text,rewards_text,ns,nr,event_date or None,event_time or None,eid))
     conn.commit(); conn.close(); return {"success":True}
 
 @app.delete("/api/events/{eid}")
