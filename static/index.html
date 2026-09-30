@@ -263,6 +263,29 @@ async function loadDash(){
       h+='<div class="bar-row"><div class="bar-label">'+esc(x.item)+'</div><div class="bar-fill" style="width:'+w+'px;background:var(--amber)"></div><div class="bar-val">'+x.total+'</div></div>'}
     h+='</div>';
   }
+  // User stats
+  if(s.user_stats && s.user_stats.length){
+    h+='<div class="ev-section"><div class="ev-section-title">👥 Статистика по пользователям</div>';
+    h+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.82rem">';
+    h+='<tr style="border-bottom:1px solid var(--border)">';
+    h+='<th style="text-align:left;padding:8px;font-family:var(--mono);font-size:.58rem;color:var(--g1);letter-spacing:.1em">Имя</th>';
+    h+='<th style="text-align:left;padding:8px;font-family:var(--mono);font-size:.58rem;color:var(--g1)">Роль</th>';
+    h+='<th style="text-align:center;padding:8px;font-family:var(--mono);font-size:.58rem;color:var(--g1)">Ивенты</th>';
+    h+='<th style="text-align:center;padding:8px;font-family:var(--mono);font-size:.58rem;color:#22c55e">✅</th>';
+    h+='<th style="text-align:center;padding:8px;font-family:var(--mono);font-size:.58rem;color:#ef4444">❌</th>';
+    h+='<th style="text-align:center;padding:8px;font-family:var(--mono);font-size:.58rem;color:var(--g1)">Коммент.</th>';
+    h+='<th style="text-align:center;padding:8px;font-family:var(--mono);font-size:.58rem;color:var(--amber)">Спавн</th></tr>';
+    for(var i=0;i<s.user_stats.length;i++){var us=s.user_stats[i];
+      h+='<tr style="border-bottom:1px solid var(--border);background:'+(i%2===0?'var(--bg2)':'var(--bg)')+'"><td style="padding:8px;color:var(--white);font-weight:500">'+esc(us.name)+'</td>';
+      h+='<td style="padding:8px">'+roleBadge(us.role)+'</td>';
+      h+='<td style="text-align:center;padding:8px;font-family:var(--mono)">'+us.events_count+'</td>';
+      h+='<td style="text-align:center;padding:8px;font-family:var(--mono);color:#22c55e">'+us.approved_count+'</td>';
+      h+='<td style="text-align:center;padding:8px;font-family:var(--mono);color:#ef4444">'+us.rejected_count+'</td>';
+      h+='<td style="text-align:center;padding:8px;font-family:var(--mono)">'+us.comments_count+'</td>';
+      h+='<td style="text-align:center;padding:8px;font-family:var(--mono);color:var(--amber)">'+us.spawn_count+'</td></tr>';
+    }
+    h+='</table></div></div>';
+  }
   $('app').innerHTML=h;
 }
 
@@ -410,7 +433,8 @@ function showEventForm(ev){
   h+='<div class="fr"><div class="fg"><label>Название</label><input name="title" value="'+(isE?esc(ev.title):'')+'" required></div>';
   h+='<div class="fg"><label>Тип</label><input name="event_type" value="'+(isE?esc(ev.event_type):'')+'" placeholder="Сюжетный / Поисковый" required></div></div>';
   h+='<div class="fr3"><div class="fg"><label>Продолжительность</label><input name="duration" value="'+(isE?esc(ev.duration):'')+'" placeholder="2–3 часа" required></div>';
-  h+='<div class="fg"><label>📅 Дата</label><input type="date" name="event_date" value="'+(isE&&ev.event_date?ev.event_date:'')+'"></div>';
+  var today=new Date().toISOString().split('T')[0];
+  h+='<div class="fg"><label>📅 Дата</label><input type="date" name="event_date" min="'+today+'" value="'+(isE&&ev.event_date?ev.event_date:'')+'"></div>';
   h+='<div class="fg"><label>⏰ Время</label><input type="time" name="event_time" value="'+(isE&&ev.event_time?ev.event_time:'')+'"></div></div>';
   h+='<div class="fr"><div class="fg"><label>Локация</label><input name="location" value="'+(isE?esc(ev.location):'')+'" required></div>';
   h+='<div class="fg"><label>Организатор</label><input name="organizer_name" value="'+(isE?esc(ev.organizer_name):(U?U.display_name:''))+'" required></div></div>';
